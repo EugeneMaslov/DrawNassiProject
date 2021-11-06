@@ -14,18 +14,18 @@ namespace DrawNassiProject.ViewModels
         {
             blocks = new List<Block>();
         }
-        public DrawNassi CreateBlock(byte type, Color color, int x, int y, DrawNassi drawNassi, int width, int height)
+        public DrawNassi CreateBlock(byte type, Color color, Color fontColor, int x, int y, DrawNassi drawNassi, int width, int height, string text)
         {
             if (type == 0)
             {
                 OperationBlock operationBlock = new OperationBlock();
                 if (blocks.Count > 0)
                 {
-                    operationBlock = new OperationBlock(color, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height);
+                    operationBlock = new OperationBlock(color, fontColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
                 }
                 else
                 {
-                    operationBlock = new OperationBlock(color, 0, x, y, width, height);
+                    operationBlock = new OperationBlock(color, fontColor, 0, x, y, width, height, text);
                 }
                 blocks.Add(operationBlock);
                 operationBlock.Draw(drawNassi);
@@ -161,7 +161,12 @@ namespace DrawNassiProject.ViewModels
             }
             return drawNassi;
         }
-        private bool AddConnections(Block block, DrawNassi drawNassi)
+        public DrawNassi TextChange(Block block, string text,DrawNassi drawNassi)
+        {
+            block.text = text;
+            return drawNassi;
+        }
+        public bool AddConnections(Block block, DrawNassi drawNassi)
         {
             return false;
         }

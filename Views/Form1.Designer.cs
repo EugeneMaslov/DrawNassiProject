@@ -41,6 +41,10 @@ namespace DrawNassiProject
             this.debugModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.включитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выключитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.шрифтToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.цветТекстаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.цветРабочегоПоляToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.цветБлоковToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
@@ -64,17 +68,12 @@ namespace DrawNassiProject
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
-            this.шрифтToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.цветТекстаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.цветРабочегоПоляToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorDialog3 = new System.Windows.Forms.ColorDialog();
-            this.цветБлоковToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -126,14 +125,14 @@ namespace DrawNassiProject
             this.toolStripMenuItem4,
             this.toolStripMenuItem5});
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(154, 22);
             this.toolStripMenuItem2.Text = "Сохранить как";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(150, 22);
             this.toolStripMenuItem4.Text = "Изображение";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
@@ -173,7 +172,7 @@ namespace DrawNassiProject
             this.включитьToolStripMenuItem,
             this.выключитьToolStripMenuItem});
             this.debugModeToolStripMenuItem.Name = "debugModeToolStripMenuItem";
-            this.debugModeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.debugModeToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.debugModeToolStripMenuItem.Text = "Debug Mode";
             // 
             // включитьToolStripMenuItem
@@ -189,6 +188,34 @@ namespace DrawNassiProject
             this.выключитьToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.выключитьToolStripMenuItem.Text = "Выключить";
             this.выключитьToolStripMenuItem.Click += new System.EventHandler(this.выключитьToolStripMenuItem_Click);
+            // 
+            // шрифтToolStripMenuItem
+            // 
+            this.шрифтToolStripMenuItem.Name = "шрифтToolStripMenuItem";
+            this.шрифтToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.шрифтToolStripMenuItem.Text = "Текст";
+            this.шрифтToolStripMenuItem.Click += new System.EventHandler(this.шрифтToolStripMenuItem_Click);
+            // 
+            // цветТекстаToolStripMenuItem
+            // 
+            this.цветТекстаToolStripMenuItem.Name = "цветТекстаToolStripMenuItem";
+            this.цветТекстаToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.цветТекстаToolStripMenuItem.Text = "Цвет текста";
+            this.цветТекстаToolStripMenuItem.Click += new System.EventHandler(this.цветТекстаToolStripMenuItem_Click);
+            // 
+            // цветРабочегоПоляToolStripMenuItem
+            // 
+            this.цветРабочегоПоляToolStripMenuItem.Name = "цветРабочегоПоляToolStripMenuItem";
+            this.цветРабочегоПоляToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.цветРабочегоПоляToolStripMenuItem.Text = "Цвет рабочего поля";
+            this.цветРабочегоПоляToolStripMenuItem.Click += new System.EventHandler(this.цветРабочегоПоляToolStripMenuItem_Click);
+            // 
+            // цветБлоковToolStripMenuItem
+            // 
+            this.цветБлоковToolStripMenuItem.Name = "цветБлоковToolStripMenuItem";
+            this.цветБлоковToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.цветБлоковToolStripMenuItem.Text = "Цвет блоков";
+            this.цветБлоковToolStripMenuItem.Click += new System.EventHandler(this.цветБлоковToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
@@ -372,6 +399,7 @@ namespace DrawNassiProject
             this.pictureBox7.DragDrop += new System.Windows.Forms.DragEventHandler(this.Operation_DragDrop);
             this.pictureBox7.DragEnter += new System.Windows.Forms.DragEventHandler(this.All_DragEnter);
             this.pictureBox7.DragOver += new System.Windows.Forms.DragEventHandler(this.All_DragOver);
+            this.pictureBox7.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox7_MouseDoubleClick);
             this.pictureBox7.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox7_MouseDown);
             this.pictureBox7.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox7_MouseMove);
             this.pictureBox7.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox7_MouseUp);
@@ -486,34 +514,6 @@ namespace DrawNassiProject
             this.label2.TabIndex = 4;
             this.label2.Text = "DebugLog:";
             // 
-            // шрифтToolStripMenuItem
-            // 
-            this.шрифтToolStripMenuItem.Name = "шрифтToolStripMenuItem";
-            this.шрифтToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.шрифтToolStripMenuItem.Text = "Текст";
-            this.шрифтToolStripMenuItem.Click += new System.EventHandler(this.шрифтToolStripMenuItem_Click);
-            // 
-            // цветТекстаToolStripMenuItem
-            // 
-            this.цветТекстаToolStripMenuItem.Name = "цветТекстаToolStripMenuItem";
-            this.цветТекстаToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.цветТекстаToolStripMenuItem.Text = "Цвет текста";
-            this.цветТекстаToolStripMenuItem.Click += new System.EventHandler(this.цветТекстаToolStripMenuItem_Click);
-            // 
-            // цветРабочегоПоляToolStripMenuItem
-            // 
-            this.цветРабочегоПоляToolStripMenuItem.Name = "цветРабочегоПоляToolStripMenuItem";
-            this.цветРабочегоПоляToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.цветРабочегоПоляToolStripMenuItem.Text = "Цвет рабочего поля";
-            this.цветРабочегоПоляToolStripMenuItem.Click += new System.EventHandler(this.цветРабочегоПоляToolStripMenuItem_Click);
-            // 
-            // цветБлоковToolStripMenuItem
-            // 
-            this.цветБлоковToolStripMenuItem.Name = "цветБлоковToolStripMenuItem";
-            this.цветБлоковToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.цветБлоковToolStripMenuItem.Text = "Цвет блоков";
-            this.цветБлоковToolStripMenuItem.Click += new System.EventHandler(this.цветБлоковToolStripMenuItem_Click);
-            // 
             // DrawNassi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -582,7 +582,6 @@ namespace DrawNassiProject
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button button6;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;

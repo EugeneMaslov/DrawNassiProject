@@ -9,22 +9,25 @@ using System.Text;
 using System.Windows.Forms;
 using DrawNassiProject.Models;
 using DrawNassiProject.ViewModels;
+using DrawNassiProject.Views;
 
 namespace DrawNassiProject
 {
     public partial class DrawNassi : Form
     {
+        #region Initialization
         public Color clr = Color.White;
         public Color fontColor = Color.Black;
         public Color workingPlaceColor = Color.White;
-        public Font font;
+        public Font font = new Font(FontFamily.GenericSerif, 8, FontStyle.Regular);
         Button btmp;
         Bitmap newbtmp;
+        SolidBrush drawBrush = new SolidBrush(Color.Black);
+        StringFormat drawFormat = new StringFormat();
         static Bitmap bitmap = new Bitmap(52, 28);
         Graphics graf = Graphics.FromImage(bitmap);
         BlockViewModel blockView = new BlockViewModel();
         bool dragging = false;
-        #region Initialization
         public DrawNassi()
         {
             InitializeComponent();
@@ -68,7 +71,7 @@ namespace DrawNassiProject
             button5.MouseMove += All_MouseMove;
             button6.MouseMove += All_MouseMove;
             newbtmp = new Bitmap(pictureBox7.Width, pictureBox7.Height);
-            DrawFirst(Color.White, 52, 28);
+            DrawFirst(Color.White, drawBrush.Color, 52, 28, "");
             button1.BackgroundImage = bitmap;
             DrawSecond(Color.White, 52, 28);
             button2.BackgroundImage = bitmap;
@@ -81,6 +84,9 @@ namespace DrawNassiProject
             DrawSixth(Color.White, 52, 28);
             button6.BackgroundImage = bitmap;
             button7.ForeColor = Color.White;
+            drawFormat.Trimming = StringTrimming.Word;
+            drawFormat.FormatFlags = drawFormat.FormatFlags | StringFormatFlags.NoWrap;
+            drawFormat.Alignment = StringAlignment.Center;
         }
         #endregion
         #region Loading and Saving
@@ -147,7 +153,7 @@ namespace DrawNassiProject
         {
             colorDialog1.ShowDialog();
             clr = colorDialog1.Color;
-            DrawFirst(clr, 52, 28);
+            DrawFirst(clr, drawBrush.Color, 52, 28, "");
             button1.BackgroundImage = bitmap;
             DrawSecond(clr, 52, 28);
             button2.BackgroundImage = bitmap;
@@ -177,11 +183,18 @@ namespace DrawNassiProject
         {
             fontDialog1.ShowDialog();
             font = fontDialog1.Font;
+            newbtmp = SizeCheck(newbtmp);
+            newbtmp = Clear(newbtmp);
+            RefreshBlocks();
         }
         private void цветТекстаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             colorDialog2.ShowDialog();
             fontColor = colorDialog2.Color;
+            drawBrush = new SolidBrush(fontColor);
+            newbtmp = SizeCheck(newbtmp);
+            newbtmp = Clear(newbtmp);
+            RefreshBlocks();
         }
         private void цветРабочегоПоляToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -198,16 +211,21 @@ namespace DrawNassiProject
         }
         #endregion
         #region Drawing
-        public void DrawFirst(Color color, int width, int height)
+        public void DrawFirst(Color color, Color fontColor,  int width, int height , string text)
+        {
+            DrawRectangle(color, width, height);
+            graf.DrawString(text, font, new SolidBrush(fontColor), width/2, height/2-font.Size, drawFormat);
+        }
+        public void DrawRectangle(Color color, int width, int height)
         {
             bitmap = new Bitmap(width, height);
             graf = Graphics.FromImage(bitmap);
-            graf.FillRectangle(new SolidBrush(color), 1, 1, width-1, height-1);
+            graf.FillRectangle(new SolidBrush(color), 1, 1, width - 1, height - 1);
             graf.DrawRectangle(new Pen(Color.Black, 1), 0, 0, width - 1, height - 1);
         }
         public void DrawSecond(Color color, int width, int height)
         {
-            DrawFirst(color, width, height);
+            DrawRectangle (color, width, height);
             graf.DrawLine(new Pen(Color.Black, 1), new Point(0, 0), new Point(width/2, height/2));
             graf.DrawLine(new Pen(Color.Black, 1), new Point(width/2, height/2), new Point(width, 0));
             graf.DrawLine(new Pen(Color.Black, 1), new Point(0, height/2), new Point(width, height/2));
@@ -215,7 +233,7 @@ namespace DrawNassiProject
         }
         public void DrawThird(Color color, int width, int height)
         {
-            DrawFirst(color, width, height);
+            DrawRectangle(color, width, height);
             graf.DrawLine(new Pen(Color.Black, 1), new Point(0, 0), new Point(width - width/4, height/2));
             graf.DrawLine(new Pen(Color.Black, 1), new Point(width - width / 4, height/2), new Point(width, 0));
             graf.DrawLine(new Pen(Color.Black, 1), new Point(0, height/2), new Point(width, height / 2));
@@ -223,19 +241,19 @@ namespace DrawNassiProject
         }
         public void DrawFouth(Color color, int width, int height)
         {
-            DrawFirst(color, width, height);
+            DrawRectangle(color, width, height);
             graf.DrawLine(new Pen(Color.Black, 1), new Point(width/4, height), new Point(width/4, height/2));
             graf.DrawLine(new Pen(Color.Black, 1), new Point(width/4, height/2), new Point(width, height/2));
         }
         public void DrawFifth(Color color, int width, int height)
         {
-            DrawFirst(color, width, height);
+            DrawRectangle(color, width, height);
             graf.DrawLine(new Pen(Color.Black, 1), new Point(width/4, 0), new Point(width/4, height/2));
             graf.DrawLine(new Pen(Color.Black, 1), new Point(width/4, height/2), new Point(width, height/2));
         }
         public void DrawSixth(Color color, int width, int height)
         {
-            DrawFirst(color, width, height);
+            DrawRectangle(color, width, height);
             graf.FillRectangle(new SolidBrush(Color.Gray), 1, 1, height/2-2, width/2);
             graf.DrawLine(new Pen(Color.Black, 1), new Point(width / 4, 0), new Point(width / 4, height));
             graf.FillRectangle(new SolidBrush(Color.Gray), width - width/4, 1, height / 2 - 2, width / 2);
@@ -261,11 +279,11 @@ namespace DrawNassiProject
         {
             e.Effect = DragDropEffects.Copy;
         }
-
+        static int i = 0;
         private void Operation_DragDrop(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
-            blockView.CreateBlock(id, clr, PointToClient(new Point(e.X - 13, e.Y - 20)).X, PointToClient(new Point(e.X - 13, e.Y - 20)).Y, this, 52, 28);
+            blockView.CreateBlock(id, clr, drawBrush.Color, PointToClient(new Point(e.X - 13, e.Y - 20)).X, PointToClient(new Point(e.X - 13, e.Y - 20)).Y, this, 52, 28, $"Block {++i}");
             graf = Graphics.FromImage(newbtmp);
             graf.DrawImage(bitmap, PointToClient(new Point(e.X - 13, e.Y - 20)));
             pictureBox7.BackgroundImage = newbtmp;
@@ -309,10 +327,10 @@ namespace DrawNassiProject
         int yR;
         private void pictureBox7_MouseDown(object sender, MouseEventArgs e)
         {
-            dragging = true;
-            pictureBox7.Focus();
             foreach (var block in blockView.blocks)
             {
+                dragging = true;
+                pictureBox7.Focus();
                 if (block.blockInternalX <= e.X && block.blockInternalY <= e.Y
                     && block.Width + block.blockInternalX >= e.X && block.Height + block.blockInternalY >= e.Y)
                 {
@@ -450,6 +468,28 @@ namespace DrawNassiProject
                 newbtmp = Clear(newbtmp);
                 RefreshBlocks();
                 Focus();
+            }
+        }
+        #endregion
+        #region InBlockChanging
+        SetText form;
+        private void pictureBox7_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            foreach (var block in blockView.blocks)
+            {
+                if (block.blockInternalX <= e.X && block.blockInternalY <= e.Y
+                    && block.Width + block.blockInternalX >= e.X && block.Height + block.blockInternalY >= e.Y)
+                {
+                    form = new SetText(this, block);
+                    form.ShowDialog();
+                    block.text = form.Block.text;
+                    block.blockInternalColor = form.Block.blockInternalColor;
+                    newbtmp = SizeCheck(newbtmp);
+                    newbtmp = Clear(newbtmp);
+                    graf = Graphics.FromImage(newbtmp);
+                    RefreshBlocks();
+                    break;
+                }
             }
         }
         #endregion

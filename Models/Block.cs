@@ -15,6 +15,7 @@ namespace DrawNassiProject.Models
         protected int maxOutCon; // максимальное количество связей (выход)
         protected List<int> blockCon { get; set; } // связи блока
         public Color blockInternalColor; // цвет блока
+        public Color fontInternalColor;
         public int blockInternalKey; // код блока
         public int blockInternalX; // x-координата блока
         public int blockInternalY; // y-координата блока

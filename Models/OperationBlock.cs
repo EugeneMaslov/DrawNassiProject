@@ -12,16 +12,18 @@ namespace DrawNassiProject.Models
         {
             
         }
-        public OperationBlock(Color color, int key, int x, int y, int width, int height)
+        public OperationBlock(Color color, Color fontColor, int key, int x, int y, int width, int height, string text)
         {
             maxInCon = 1;
             maxOutCon = 1;
             blockInternalColor = color;
+            fontInternalColor = fontColor;
             blockInternalKey = key;
             blockInternalX = x;
             blockInternalY = y;
             Width = width;
             Height = height;
+            this.text = text;
             type = 0;
         }
         public void AddCon(int newCon)
@@ -33,7 +35,9 @@ namespace DrawNassiProject.Models
         }
         public override DrawNassi Draw(DrawNassi drawNassi)
         {
-            drawNassi.DrawFirst(this.blockInternalColor, Width, Height);
+            Width = text.Length * (int)drawNassi.font.Size;
+            Height = (int)drawNassi.font.Size * 2;
+            drawNassi.DrawFirst(this.blockInternalColor, fontInternalColor, Width, Height, text);
             return drawNassi;
         }
     }
