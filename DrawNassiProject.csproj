@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Models\Block.cs" />
     <Compile Include="Models\BranchingBlock.cs" />
+    <Compile Include="Models\Composite\Unit.cs" />
     <Compile Include="Models\OperationBlock.cs" />
     <Compile Include="Models\Subroutine.cs" />
     <Compile Include="Models\WhileBlock.cs" />

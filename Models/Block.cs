@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using DrawNassiProject.Models.Composite;
 
 namespace DrawNassiProject.Models
 {
@@ -11,9 +12,13 @@ namespace DrawNassiProject.Models
     /// </summary>
     public abstract class Block
     {
-        protected int maxInCon; // максимальное количесво связей (вход)
-        protected int maxOutCon; // максимальное количество связей (выход)
-        protected List<int> blockCon { get; set; } // связи блока
+        public Unit group;
+        public int addWidth;
+        public int index;
+        public int maxInCon; // максимальное количесво связей (вход)
+        public int maxOutCon; // максимальное количество связей (выход)
+        public List<Block> blockInCon { get; set; } // связи блока (in)
+        public List<Block> blockOutCon { get; set; } // связи блока (out)
         public Color blockInternalColor; // цвет блока
         public Color fontInternalColor;
         public int blockInternalKey; // код блока
@@ -23,11 +28,33 @@ namespace DrawNassiProject.Models
         public int Height;
         public byte type;
         public string text;
-        public override bool Equals(object obj)
+        public void AddInCon(Block newCon)
         {
-            Block block = obj as Block;
-            return this.blockInternalKey == block.blockInternalKey;
+            if (!blockInCon.Contains(newCon))
+            {
+                blockInCon.Add(newCon);
+            }
+        }
+        public void AddOutCon(Block newCon)
+        {
+            if (!blockOutCon.Contains(newCon))
+            {
+                blockOutCon.Add(newCon);
+            }
+        }
+        public virtual DrawNassi Add(DrawNassi drawNassi, Block block)
+        {
+            return drawNassi;
         }
         public abstract DrawNassi Draw(DrawNassi drawNassi);
+        public virtual Unit GetChild(DrawNassi drawNassi, Unit unit, Block block)
+        {
+            return unit;
+        }
+
+        public virtual DrawNassi Remove(DrawNassi drawNassi, Unit unit)
+        {
+            return drawNassi;
+        }
     }
 }

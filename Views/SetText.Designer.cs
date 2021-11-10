@@ -126,7 +126,7 @@ namespace DrawNassiProject.Views
             this.MaximumSize = new System.Drawing.Size(320, 240);
             this.MinimumSize = new System.Drawing.Size(320, 240);
             this.Name = "SetText";
-            this.Text = "Изменить текст";
+            this.Text = "Изменить блок";
             this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.SetText_PreviewKeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
