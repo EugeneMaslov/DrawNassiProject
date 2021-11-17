@@ -41,9 +41,10 @@ namespace DrawNassiProject
             this.debugModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.включитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выключитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.цветРабочегоПоляToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.шрифтToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.цветТекстаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.цветРабочегоПоляToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.цветКонтураToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.цветБлоковToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button6 = new System.Windows.Forms.Button();
@@ -74,6 +75,8 @@ namespace DrawNassiProject
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
             this.colorDialog3 = new System.Windows.Forms.ColorDialog();
+            this.colorDialog4 = new System.Windows.Forms.ColorDialog();
+            this.colorDialog5 = new System.Windows.Forms.ColorDialog();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -157,9 +160,10 @@ namespace DrawNassiProject
             this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.debugModeToolStripMenuItem,
+            this.цветРабочегоПоляToolStripMenuItem,
             this.шрифтToolStripMenuItem,
             this.цветТекстаToolStripMenuItem,
-            this.цветРабочегоПоляToolStripMenuItem,
+            this.цветКонтураToolStripMenuItem,
             this.цветБлоковToolStripMenuItem});
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
@@ -189,6 +193,13 @@ namespace DrawNassiProject
             this.выключитьToolStripMenuItem.Text = "Выключить";
             this.выключитьToolStripMenuItem.Click += new System.EventHandler(this.выключитьToolStripMenuItem_Click);
             // 
+            // цветРабочегоПоляToolStripMenuItem
+            // 
+            this.цветРабочегоПоляToolStripMenuItem.Name = "цветРабочегоПоляToolStripMenuItem";
+            this.цветРабочегоПоляToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.цветРабочегоПоляToolStripMenuItem.Text = "Цвет рабочего поля";
+            this.цветРабочегоПоляToolStripMenuItem.Click += new System.EventHandler(this.цветРабочегоПоляToolStripMenuItem_Click);
+            // 
             // шрифтToolStripMenuItem
             // 
             this.шрифтToolStripMenuItem.Name = "шрифтToolStripMenuItem";
@@ -203,12 +214,12 @@ namespace DrawNassiProject
             this.цветТекстаToolStripMenuItem.Text = "Цвет текста";
             this.цветТекстаToolStripMenuItem.Click += new System.EventHandler(this.цветТекстаToolStripMenuItem_Click);
             // 
-            // цветРабочегоПоляToolStripMenuItem
+            // цветКонтураToolStripMenuItem
             // 
-            this.цветРабочегоПоляToolStripMenuItem.Name = "цветРабочегоПоляToolStripMenuItem";
-            this.цветРабочегоПоляToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.цветРабочегоПоляToolStripMenuItem.Text = "Цвет рабочего поля";
-            this.цветРабочегоПоляToolStripMenuItem.Click += new System.EventHandler(this.цветРабочегоПоляToolStripMenuItem_Click);
+            this.цветКонтураToolStripMenuItem.Name = "цветКонтураToolStripMenuItem";
+            this.цветКонтураToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.цветКонтураToolStripMenuItem.Text = "Цвет контура";
+            this.цветКонтураToolStripMenuItem.Click += new System.EventHandler(this.цветКонтураToolStripMenuItem_Click);
             // 
             // цветБлоковToolStripMenuItem
             // 
@@ -502,7 +513,7 @@ namespace DrawNassiProject
             // 
             this.textBox2.Location = new System.Drawing.Point(257, 5);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(217, 20);
+            this.textBox2.Size = new System.Drawing.Size(223, 20);
             this.textBox2.TabIndex = 3;
             // 
             // label2
@@ -599,6 +610,9 @@ namespace DrawNassiProject
         private System.Windows.Forms.ToolStripMenuItem цветРабочегоПоляToolStripMenuItem;
         private System.Windows.Forms.ColorDialog colorDialog3;
         private System.Windows.Forms.ToolStripMenuItem цветБлоковToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem цветКонтураToolStripMenuItem;
+        private System.Windows.Forms.ColorDialog colorDialog4;
+        private System.Windows.Forms.ColorDialog colorDialog5;
     }
 }
 

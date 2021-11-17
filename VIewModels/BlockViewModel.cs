@@ -8,7 +8,7 @@ using DrawNassiProject.Models.Composite;
 
 namespace DrawNassiProject.ViewModels
 {
-    class BlockViewModel
+    public class BlockViewModel
     {
         public List<Unit> groups;
         public List<Block> blocks;
@@ -17,7 +17,7 @@ namespace DrawNassiProject.ViewModels
             blocks = new List<Block>();
             groups = new List<Unit>();
         }
-        public DrawNassi CreateBlock(byte type, Color color, Color fontColor, int x, int y, DrawNassi drawNassi, int width, int height, string text, int maxWidth)
+        public DrawNassi CreateBlock(byte type, Color color, Color fontColor, Color contrColor, int x, int y, DrawNassi drawNassi, int width, int height, string text, int maxWidth)
         {
             Unit unit = new Unit();
             if (type == 0)
@@ -25,11 +25,11 @@ namespace DrawNassiProject.ViewModels
                 OperationBlock operationBlock = new OperationBlock();
                 if (blocks.Count > 0)
                 {
-                    operationBlock = new OperationBlock(color, fontColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
+                    operationBlock = new OperationBlock(color, fontColor, contrColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
                 }
                 else
                 {
-                    operationBlock = new OperationBlock(color, fontColor, 0, x, y, width, height, text);
+                    operationBlock = new OperationBlock(color, fontColor, contrColor, 0, x, y, width, height, text);
                 }
                 operationBlock.group = unit;
                 unit.Add(drawNassi, operationBlock);
@@ -41,11 +41,11 @@ namespace DrawNassiProject.ViewModels
                 BranchingBlock branchingBlock = new BranchingBlock();
                 if (blocks.Count > 0)
                 {
-                    branchingBlock = new BranchingBlock(color, fontColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
+                    branchingBlock = new BranchingBlock(color, fontColor, contrColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
                 }
                 else
                 {
-                    branchingBlock = new BranchingBlock(color, fontColor, 0, x, y, width, height, text);
+                    branchingBlock = new BranchingBlock(color, fontColor, contrColor, 0, x, y, width, height, text);
                 }
                 branchingBlock.group = unit;
                 unit.Add(drawNassi, branchingBlock);
@@ -57,11 +57,11 @@ namespace DrawNassiProject.ViewModels
                 WhileBlock whileBlock = new WhileBlock();
                 if (blocks.Count > 0)
                 {
-                    whileBlock = new WhileBlock(color, fontColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
+                    whileBlock = new WhileBlock(color, fontColor, contrColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
                 }
                 else
                 {
-                    whileBlock = new WhileBlock(color, fontColor, 0, x, y, width, height, text);
+                    whileBlock = new WhileBlock(color, fontColor, contrColor, 0, x, y, width, height, text);
                 }
                 whileBlock.group = unit;
                 unit.Add(drawNassi, whileBlock);
@@ -73,11 +73,11 @@ namespace DrawNassiProject.ViewModels
                 WhilePreBlock whilepreBlock = new WhilePreBlock();
                 if (blocks.Count > 0)
                 {
-                    whilepreBlock = new WhilePreBlock(color, fontColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
+                    whilepreBlock = new WhilePreBlock(color, fontColor, contrColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
                 }
                 else
                 {
-                    whilepreBlock = new WhilePreBlock(color, fontColor, 0, x, y, width, height, text);
+                    whilepreBlock = new WhilePreBlock(color, fontColor, contrColor, 0, x, y, width, height, text);
                 }
                 unit.Add(drawNassi, whilepreBlock);
                 whilepreBlock.group = unit;
@@ -89,11 +89,11 @@ namespace DrawNassiProject.ViewModels
                 WhilePostBlock whilePostBlock = new WhilePostBlock();
                 if (blocks.Count > 0)
                 {
-                    whilePostBlock = new WhilePostBlock(color, fontColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
+                    whilePostBlock = new WhilePostBlock(color, fontColor, contrColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
                 }
                 else
                 {
-                    whilePostBlock = new WhilePostBlock(color, fontColor, 0, x, y, width, height, text);
+                    whilePostBlock = new WhilePostBlock(color, fontColor, contrColor, 0, x, y, width, height, text);
                 }
                 whilePostBlock.group = unit;
                 unit.Add(drawNassi, whilePostBlock);
@@ -105,11 +105,11 @@ namespace DrawNassiProject.ViewModels
                 Subroutine subroutine = new Subroutine();
                 if (blocks.Count > 0)
                 {
-                    subroutine = new Subroutine(color, fontColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
+                    subroutine = new Subroutine(color, fontColor, contrColor, blocks[blocks.Count - 1].blockInternalKey + 1, x, y, width, height, text);
                 }
                 else
                 {
-                    subroutine = new Subroutine(color, fontColor, 0, x, y, width, height, text);
+                    subroutine = new Subroutine(color, fontColor, contrColor, 0, x, y, width, height, text);
                 }
                 subroutine.group = unit;
                 unit.Add(drawNassi, subroutine);
@@ -119,15 +119,17 @@ namespace DrawNassiProject.ViewModels
             groups.Add(unit);
             return drawNassi;
         }
-        public DrawNassi DeleteBlock(DrawNassi drawNassi, Block blockNew)
+        public DrawNassi DeleteBlock(DrawNassi drawNassi, Unit unit)
         {
-            foreach (var block in blocks)
+            foreach (var block in groups)
             {
-                if (block == blockNew)
+                if (block == unit)
                 {
-                    blocks.Remove(block);
-                    block.group.Blocks.Remove(block);
-                    groups.Clear();
+                    groups.Remove(block);
+                    for (int i = block.Blocks.Count-1; i >= 0; i--)
+                    {
+                        blocks.Remove(block.Blocks[i]);
+                    }
                     break;
                 }
             }
@@ -152,10 +154,23 @@ namespace DrawNassiProject.ViewModels
         public DrawNassi StickingBlock(Unit group, Unit unit, DrawNassi drawNassi)
         {
             Unit newGroup = group;
+            int index = 0;
+            if (group.outBlock != null)
+            {
+                for (int i = 0; i < group.outBlock.subgroup.Count; i++)
+                {
+                    if (group.outBlock.subgroup[i] == group)
+                    {
+                        index = i;
+                    }
+                }
+            }
             for (int i = 0; i < unit.Blocks.Count; i++)
             {
                 newGroup.Add(drawNassi, unit.Blocks[i]);
             }
+            groups.Remove(unit);
+            groups.Remove(group);
             for (int i = groups.Count-1; i >= 0; i--)
             {
                 if (groups[i].Blocks.Count == 0)
@@ -163,10 +178,22 @@ namespace DrawNassiProject.ViewModels
                     groups.Remove(groups[i]);
                 }
             }
-            groups.Remove(unit);
-            groups.Remove(group);
-            groups.Add(newGroup);
+            if (group.outBlock == null)
+            {
+                groups.Add(newGroup);
+            }
+            if (group.outBlock != null)
+            {
+                group.outBlock.subgroup[index] = newGroup;
+            }
             group.Draw(drawNassi);
+            return drawNassi;
+        }
+        public DrawNassi InBlocks(Block block, Unit unit, DrawNassi drawNassi, int index)
+        {
+            groups.Remove(unit);
+            block.subgroup[index] = unit;
+            unit.outBlock = block;
             return drawNassi;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -25,10 +26,23 @@ namespace DrawNassiProject.Models.Composite
         }
         public override DrawNassi Draw(DrawNassi drawNassi)
         {
-            foreach (var cur in Blocks)
+            if (Blocks.Count > 0)
             {
-                cur.Width = UnitWidth;
-                cur.Draw(drawNassi);
+                Block block = Blocks[0];
+                foreach (var cur in Blocks)
+                {
+
+                    drawNassi.graf = Graphics.FromImage(drawNassi.newbtmp);
+                    if (block != cur)
+                    {
+                        cur.blockInternalX = block.blockInternalX;
+                        cur.blockInternalY = block.blockInternalY + block.Height;
+                    }
+                    cur.Draw(drawNassi);
+                    block = cur;
+                    drawNassi.graf = Graphics.FromImage(drawNassi.newbtmp);
+                    drawNassi.graf.DrawImage(drawNassi.bitmap, cur.blockInternalX, cur.blockInternalY);
+                }
             }
             return drawNassi;
         }
@@ -74,6 +88,11 @@ namespace DrawNassiProject.Models.Composite
                 }
             }
             return drawNassi;
+        }
+        public override bool Equals(object obj)
+        {
+            Unit unit = obj as Unit;
+            return this.Blocks == unit.Blocks; 
         }
     }
 }

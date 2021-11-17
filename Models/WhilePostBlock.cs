@@ -12,7 +12,7 @@ namespace DrawNassiProject.Models
         {
 
         }
-        public WhilePostBlock(Color color, Color fontColor, int key, int x, int y, int width, int height, string text)
+        public WhilePostBlock(Color color, Color fontColor, Color contrColor, int key, int x, int y, int width, int height, string text)
         {
             blockInCon = new List<Block>();
             blockOutCon = new List<Block>();
@@ -26,6 +26,7 @@ namespace DrawNassiProject.Models
             Width = width;
             Height = height;
             this.text = text;
+            contrInternalColor = contrColor;
             type = 4;
         }
         public override DrawNassi Draw(DrawNassi drawNassi)
@@ -40,7 +41,7 @@ namespace DrawNassiProject.Models
             }
             else Width = group.UnitWidth;
             Height = (int)drawNassi.font.Size * 4;
-            drawNassi.DrawFifth(this.blockInternalColor, fontInternalColor, Width, Height, text);
+            drawNassi.DrawFifth(this.blockInternalColor, fontInternalColor, contrInternalColor, Width, Height, text);
             return drawNassi;
         }
     }

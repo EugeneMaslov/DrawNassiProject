@@ -37,6 +37,8 @@ namespace DrawNassiProject.Views
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
+            this.button4 = new System.Windows.Forms.Button();
+            this.colorDialog3 = new System.Windows.Forms.ColorDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -46,7 +48,7 @@ namespace DrawNassiProject.Views
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.label1.Location = new System.Drawing.Point(80, 37);
+            this.label1.Location = new System.Drawing.Point(83, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(148, 24);
             this.label1.TabIndex = 0;
@@ -57,7 +59,7 @@ namespace DrawNassiProject.Views
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(28, 64);
+            this.textBox1.Location = new System.Drawing.Point(31, 44);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(241, 20);
             this.textBox1.TabIndex = 1;
@@ -72,7 +74,7 @@ namespace DrawNassiProject.Views
             this.button1.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(28, 90);
+            this.button1.Location = new System.Drawing.Point(31, 70);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(241, 20);
             this.button1.TabIndex = 2;
@@ -88,7 +90,7 @@ namespace DrawNassiProject.Views
             this.button2.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(28, 142);
+            this.button2.Location = new System.Drawing.Point(31, 149);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(241, 20);
             this.button2.TabIndex = 3;
@@ -104,7 +106,7 @@ namespace DrawNassiProject.Views
             this.button3.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Location = new System.Drawing.Point(28, 116);
+            this.button3.Location = new System.Drawing.Point(31, 96);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(241, 20);
             this.button3.TabIndex = 4;
@@ -112,11 +114,28 @@ namespace DrawNassiProject.Views
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.button4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button4.Location = new System.Drawing.Point(31, 122);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(241, 20);
+            this.button4.TabIndex = 5;
+            this.button4.Text = "Изменить контур блока";
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // SetText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(304, 201);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -142,5 +161,7 @@ namespace DrawNassiProject.Views
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ColorDialog colorDialog2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ColorDialog colorDialog3;
     }
 }

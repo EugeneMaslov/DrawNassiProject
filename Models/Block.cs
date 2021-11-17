@@ -13,7 +13,9 @@ namespace DrawNassiProject.Models
     public abstract class Block
     {
         public Unit group;
-        public int addWidth;
+        public Block outBlock;
+        public List<Unit> subgroup;
+        public int addHeight;
         public int index;
         public int maxInCon; // максимальное количесво связей (вход)
         public int maxOutCon; // максимальное количество связей (выход)
@@ -21,6 +23,7 @@ namespace DrawNassiProject.Models
         public List<Block> blockOutCon { get; set; } // связи блока (out)
         public Color blockInternalColor; // цвет блока
         public Color fontInternalColor;
+        public Color contrInternalColor;
         public int blockInternalKey; // код блока
         public int blockInternalX; // x-координата блока
         public int blockInternalY; // y-координата блока

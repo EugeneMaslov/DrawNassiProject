@@ -14,6 +14,7 @@ namespace DrawNassiProject.Views
     {
         public Color clr;
         public Color fontColor;
+        public Color contrColor;
         public Block Block;
         public SetText(DrawNassi drawNassi, Block block)
         {
@@ -22,8 +23,10 @@ namespace DrawNassiProject.Views
             Block = block;
             clr = Block.blockInternalColor;
             fontColor = Block.fontInternalColor;
+            contrColor = Block.contrInternalColor;
             colorDialog1.Color = clr;
             colorDialog2.Color = fontColor;
+            colorDialog3.Color = contrColor;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,11 +44,17 @@ namespace DrawNassiProject.Views
             colorDialog2.ShowDialog();
             fontColor = colorDialog2.Color;
         }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            colorDialog3.ShowDialog();
+            contrColor = colorDialog3.Color;
+        }
         private void Save()
         {
             Block.blockInternalColor = clr;
             Block.text = textBox1.Text;
             Block.fontInternalColor = fontColor;
+            Block.contrInternalColor = contrColor;
             this.Close();
         }
         private void SetText_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
