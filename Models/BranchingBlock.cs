@@ -7,9 +7,9 @@ using System.Text;
 
 namespace DrawNassiProject.Models
 {
+    [Serializable]
     public class BranchingBlock : Block
     {
-        public bool clastered = false;
         public BranchingBlock()
         {
 
@@ -42,7 +42,7 @@ namespace DrawNassiProject.Models
                     group.UnitWidth = Width;
                 }
             }
-            else Width = group.UnitWidth;
+            Width = group.UnitWidth;
             addHeight = 0;
             int preHeight;
             foreach (var item in subgroup)
@@ -51,7 +51,7 @@ namespace DrawNassiProject.Models
                 foreach (var block in item.Blocks)
                 {
                     preHeight += block.Height;
-                    if (block.Width * 2 > group.UnitWidth)
+                    if (block.group.UnitWidth * 2 > group.UnitWidth)
                     {
                         group.UnitWidth = block.Width * 2;
                     }
@@ -67,6 +67,7 @@ namespace DrawNassiProject.Models
                 addHeight = addHeight - (int)drawNassi.font.Size * 2;
             }
             Height = (int)drawNassi.font.Size * 4 + addHeight;
+            Width = group.UnitWidth;
             if (subgroup[0].Blocks.Count > 0)
             {
                 subgroup[0].Blocks[0].group.UnitWidth = group.UnitWidth / 2;

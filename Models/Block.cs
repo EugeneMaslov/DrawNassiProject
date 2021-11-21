@@ -7,6 +7,7 @@ using DrawNassiProject.Models.Composite;
 
 namespace DrawNassiProject.Models
 {
+    [Serializable]
     /// <summary>
     /// Общий класс блоков
     /// </summary>

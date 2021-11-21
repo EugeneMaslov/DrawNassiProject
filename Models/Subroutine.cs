@@ -6,6 +6,7 @@ using System.Text;
 
 namespace DrawNassiProject.Models
 {
+    [Serializable]
     class Subroutine : Block
     {
         public Subroutine()
@@ -41,7 +42,7 @@ namespace DrawNassiProject.Models
             }
             else Width = group.UnitWidth;
             Height = (int)drawNassi.font.Size*2;
-            drawNassi.DrawSixth(this.blockInternalColor, fontInternalColor, contrInternalColor, Width, Height, text);
+            drawNassi.DrawSixth(this.blockInternalColor, fontInternalColor, contrInternalColor, (int)Width, Height, text);
             return drawNassi;
         }
     }

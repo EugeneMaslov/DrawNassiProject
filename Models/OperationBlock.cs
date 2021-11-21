@@ -6,6 +6,7 @@ using System.Drawing;
 
 namespace DrawNassiProject.Models
 {
+    [Serializable]
     class OperationBlock : Block
     {
         public OperationBlock()

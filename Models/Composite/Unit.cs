@@ -6,6 +6,7 @@ using System.Text;
 
 namespace DrawNassiProject.Models.Composite
 {
+    [SerializableAttribute]
     public class Unit : Block
     {
         public List<Block> Blocks { get; set; }
@@ -88,11 +89,6 @@ namespace DrawNassiProject.Models.Composite
                 }
             }
             return drawNassi;
-        }
-        public override bool Equals(object obj)
-        {
-            Unit unit = obj as Unit;
-            return this.Blocks == unit.Blocks; 
         }
     }
 }

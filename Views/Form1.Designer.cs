@@ -77,6 +77,7 @@ namespace DrawNassiProject
             this.colorDialog3 = new System.Windows.Forms.ColorDialog();
             this.colorDialog4 = new System.Windows.Forms.ColorDialog();
             this.colorDialog5 = new System.Windows.Forms.ColorDialog();
+            this.saveFileDialog2 = new System.Windows.Forms.SaveFileDialog();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -457,7 +458,7 @@ namespace DrawNassiProject
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 7;
-            this.textBox1.Text = "Project.source";
+            this.textBox1.Text = "Diagram.json";
             // 
             // pictureBox5
             // 
@@ -613,6 +614,7 @@ namespace DrawNassiProject
         private System.Windows.Forms.ToolStripMenuItem цветКонтураToolStripMenuItem;
         private System.Windows.Forms.ColorDialog colorDialog4;
         private System.Windows.Forms.ColorDialog colorDialog5;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog2;
     }
 }
 

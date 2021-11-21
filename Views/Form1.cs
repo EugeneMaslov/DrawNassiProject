@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -11,6 +12,8 @@ using DrawNassiProject.Models;
 using DrawNassiProject.Models.Composite;
 using DrawNassiProject.ViewModels;
 using DrawNassiProject.Views;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DrawNassiProject
 {
@@ -18,6 +21,7 @@ namespace DrawNassiProject
     {
         #region Initialization
         public Color clr = Color.White;
+        string serialized;
         public int maxWidth = 52;
         public Color fontColor = Color.Black;
         public Color workingPlaceColor = Color.White;
@@ -79,11 +83,11 @@ namespace DrawNassiProject
             button1.BackgroundImage = bitmap;
             DrawSecond(Color.White, drawBrush.Color, contrColor, 52, 28, "", 0);
             button2.BackgroundImage = bitmap;
-            DrawThird(Color.White, drawBrush.Color, contrColor, 52, 28, "");
+            DrawThird(Color.White, drawBrush.Color, contrColor, 52, 28, "", 0);
             button3.BackgroundImage = bitmap;
-            DrawFouth(Color.White, drawBrush.Color, contrColor, 52, 28, "");
+            DrawFouth(Color.White, drawBrush.Color, contrColor, 52, 28, "", 0);
             button4.BackgroundImage = bitmap;
-            DrawFifth(Color.White, drawBrush.Color, contrColor, 52, 28, "");
+            DrawFifth(Color.White, drawBrush.Color, contrColor, 52, 28, "", 0);
             button5.BackgroundImage = bitmap;
             DrawSixth(Color.White, drawBrush.Color, contrColor, 52, 28, "");
             button6.BackgroundImage = bitmap;
@@ -96,26 +100,70 @@ namespace DrawNassiProject
         #region Loading and Saving
         private void DrawNassi_Load(object sender, EventArgs e)
         {
-            openFileDialog1.FileName = @"Nassi.txt";
+            openFileDialog1.FileName = @"Diagram.json";
             saveFileDialog1.FileName = $"{textBox1.Text.Replace(".", "_")}";
+            saveFileDialog2.FileName = $"{textBox1.Text}";
             openFileDialog1.Filter =
-                     "Текстовые файлы (*.txt)|*.txt|All files (*.*)|*.*";
+                     "Json Файл (*.json)|*.json|All files (*.*)|*.*";
             saveFileDialog1.Filter =
                      "Точечный рисунок (*.png)|*.png|All files (*.*)|*.*";
+            saveFileDialog2.Filter =
+                     "Json Файл (*.json)|*.json|All files (*.*)|*.*";
         }
-
+        private void RecurtsRelise(List<Unit> groups)
+        {
+            foreach (var item in groups)
+            {
+                item.group = item;
+                Rec(item.group);
+            }
+        }
+        private void Rec(Unit item)
+        {
+            foreach (var block in item.Blocks)
+            {
+                block.group = item;
+                if (block.type >= 1 && block.type <= 4)
+                {
+                    foreach (var news in block.subgroup)
+                    {
+                        Rec(news);
+                        BlocksRecusrst(news);
+                    }
+                }
+            }
+        }
+        private void BlocksRecusrstRelise(Unit item)
+        {
+            foreach (var block in item.Blocks)
+            {
+                block.group = item;
+                if (block.type >= 1 && block.type <= 4)
+                {
+                    foreach (var news in block.subgroup)
+                    {
+                        BlocksRecusrstRelise(news);
+                    }
+                }
+            }
+        }
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName == String.Empty) return;
-            // Чтение текстового файла
+            // Чтение файла
             try
             {
-                var reader = new System.IO.StreamReader(
-                openFileDialog1.FileName, Encoding.GetEncoding(1251));
-                // тут в будущем будет код
-
-                reader.Close();
+                serialized = "";
+                var settings = new JsonSerializerSettings()
+                {
+                    TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto,
+                    NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                };
+                blockView.groups = JsonConvert.DeserializeObject<List<Unit>>(File.ReadAllText(openFileDialog1.FileName), settings);
+                RecurtsRelise(blockView.groups);
+                blockView.blocks.Clear();
+                RefreshGroups();
             }
             catch (System.IO.FileNotFoundException situation)
             {
@@ -135,13 +183,32 @@ namespace DrawNassiProject
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     pictureBox7.BackgroundImage.Save(saveFileDialog1.FileName);
-                    textBox1.Text = saveFileDialog1.FileName;
-                    textBox1.Width = textBox1.Text.Length * 7;
                 }
             }
         }
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
+            serialized = "";
+            var settings = new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                Formatting = Formatting.Indented,
+                TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
+            };
+            serialized = JsonConvert.SerializeObject(blockView.groups, settings);
+            if (serialized.Length > 1)
+            {
+                if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+                {
+                    if (!File.Exists(saveFileDialog2.FileName))
+                    {
+                        File.Create(saveFileDialog2.FileName).Close();
+                    }
+                    File.WriteAllText(saveFileDialog2.FileName, serialized, Encoding.GetEncoding(1251));
+                    textBox1.Text = saveFileDialog2.FileName;
+                    textBox1.Width = textBox1.Text.Length * 7;
+                }
+            }
         }
         #endregion
         #region DebugMode
@@ -166,11 +233,11 @@ namespace DrawNassiProject
             button1.BackgroundImage = bitmap;
             DrawSecond(clr, drawBrush.Color, contrColor, 52, 28, "", 0);
             button2.BackgroundImage = bitmap;
-            DrawThird(clr, drawBrush.Color, contrColor, 52, 28, "");
+            DrawThird(clr, drawBrush.Color, contrColor, 52, 28, "", 0);
             button3.BackgroundImage = bitmap;
-            DrawFouth(clr, drawBrush.Color, contrColor, 52, 28, "");
+            DrawFouth(clr, drawBrush.Color, contrColor, 52, 28, "", 0);
             button4.BackgroundImage = bitmap;
-            DrawFifth(clr, drawBrush.Color, contrColor, 52, 28, "");
+            DrawFifth(clr, drawBrush.Color, contrColor, 52, 28, "", 0);
             button5.BackgroundImage = bitmap;
             DrawSixth(clr, drawBrush.Color, contrColor, 52, 28, "");
             button6.BackgroundImage = bitmap;
@@ -241,28 +308,28 @@ namespace DrawNassiProject
             graf.DrawLine(new Pen(contrColor, 1), new Point(width/2, height), new Point(width/2, (height-addWidth)/2));
             graf.DrawString(text, font, new SolidBrush(fontColor), width / 2, 0, drawFormat);
         }
-        public void DrawThird(Color color, Color fontColor, Color contrColor, int width, int height, string text)
+        public void DrawThird(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addHeight)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawLine(new Pen(contrColor, 1), new Point(0, 0), new Point(width - width/4, height/2));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width - width / 4, height/2), new Point(width, 0));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(0, height/2), new Point(width, height / 2));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width - width / 4, height/2), new Point(width - width / 4, height));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(0, 0), new Point(width - width/4, (height - addHeight)/2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width - width / 4, (height - addHeight) / 2), new Point(width, 0));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(0, (height - addHeight) / 2), new Point(width, (height - addHeight) / 2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width - width / 4, (height - addHeight) / 2), new Point(width - width / 4, height));
             graf.DrawString(text, font, new SolidBrush(fontColor), width - width / 3, 0, drawFormat);
         }
-        public void DrawFouth(Color color, Color fontColor, Color contrColor, int width, int height, string text)
+        public void DrawFouth(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addHeight)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, height), new Point(width/4, height/2));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, height/2), new Point(width, height/2));
-            graf.DrawString(text, font, new SolidBrush(fontColor), width / 28, height/16);
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, height), new Point(width/4, (height - addHeight)/2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, (height - addHeight)/2), new Point(width, (height - addHeight)/2));
+            graf.DrawString(text, font, new SolidBrush(fontColor), width / (width/2), height/ (int)(height/1.75));
         }
-        public void DrawFifth(Color color, Color fontColor, Color contrColor, int width, int height, string text)
+        public void DrawFifth(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addHeight)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, 0), new Point(width/4, height/2));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, height/2), new Point(width, height/2));
-            graf.DrawString(text, font, new SolidBrush(fontColor), width / 28, height - font.Size * 2);
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, 0), new Point(width/4, (height + addHeight) / 2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, (height + addHeight) / 2), new Point(width, (height + addHeight) / 2));
+            graf.DrawString(text, font, new SolidBrush(fontColor), width / (width / 2), height - font.Size * 2);
         }
         public void DrawSixth(Color color, Color fontColor, Color contrColor, int width, int height, string text)
         {
@@ -342,55 +409,62 @@ namespace DrawNassiProject
         
         private void pictureBox7_MouseDown(object sender, MouseEventArgs e)
         {
-            for (int i = blockView.blocks.Count-1; i >= 0; i--)
+            if (e.Button == MouseButtons.Left)
             {
-                dragging = true;
-                pictureBox7.Focus();
-                if (blockView.blocks[i].blockInternalX <= e.X && blockView.blocks[i].blockInternalY <= e.Y
-                    && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= e.X && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= e.Y)
+                for (int i = blockView.blocks.Count - 1; i >= 0; i--)
                 {
-                    xR = e.X - blockView.blocks[i].blockInternalX;
-                    yR = e.Y - blockView.blocks[i].blockInternalY;
-                    mainblock = blockView.blocks[i];
-                    foreach (var block in mainblock.blockOutCon)
+                    dragging = true;
+                    pictureBox7.Focus();
+                    if (blockView.blocks[i].blockInternalX <= e.X && blockView.blocks[i].blockInternalY <= e.Y
+                        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= e.X && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= e.Y)
                     {
-                        block.blockInCon.Remove(mainblock);
-                    }
-                    foreach (var block in mainblock.blockInCon)
-                    {
-                        block.blockOutCon.Remove(mainblock);
-                    }
-                    if (mainblock.group.Blocks.Count > 0)
-                    {
-                        Unit preNew = mainblock.group;
-                        blockView.groups.Remove(mainblock.group);
-                        if (mainblock.outBlock != null)
+                        xR = e.X - blockView.blocks[i].blockInternalX;
+                        yR = e.Y - blockView.blocks[i].blockInternalY;
+                        mainblock = blockView.blocks[i];
+                        foreach (var block in mainblock.blockOutCon)
                         {
-                            for (int k = 0; k < mainblock.group.outBlock.subgroup.Count; k++)
+                            block.blockInCon.Remove(mainblock);
+                        }
+                        foreach (var block in mainblock.blockInCon)
+                        {
+                            block.blockOutCon.Remove(mainblock);
+                        }
+                        if (mainblock.group.Blocks.Count > 0)
+                        {
+                            Unit preNew = mainblock.group;
+                            blockView.groups.Remove(mainblock.group);
+                            if (mainblock.outBlock != null)
                             {
-                                if (mainblock.group.outBlock.subgroup[k] == mainblock.group.outBlock.group)
+                                for (int k = 0; k < mainblock.group.outBlock.subgroup.Count; k++)
                                 {
-                                    mainblock.group = mainblock.group.GetChild(this, mainblock.group, mainblock);
-                                    preNew.group = preNew.RemoveChild(this, preNew, mainblock.group);
-                                    mainblock.group.outBlock.subgroup[k] = preNew.group;
+                                    if (mainblock.group.outBlock.subgroup[k] == mainblock.group.outBlock.group)
+                                    {
+                                        if (mainblock.group.outBlock.type == 2)
+                                        {
+                                            mainblock.group.outBlock.subgroup.Remove(mainblock.group);
+                                        }
+                                        mainblock.group = mainblock.group.GetChild(this, mainblock.group, mainblock);
+                                        preNew.group = preNew.RemoveChild(this, preNew, mainblock.group);
+                                        mainblock.group.outBlock.subgroup[k] = preNew.group;
+                                    }
                                 }
                             }
+                            else
+                            {
+                                mainblock.group = mainblock.group.GetChild(this, mainblock.group, mainblock);
+                                preNew.group = preNew.RemoveChild(this, preNew, mainblock.group);
+                            }
+                            if (preNew.group != null && preNew.group.Blocks.Count > 0)
+                            {
+                                blockView.groups.Add(preNew);
+                            }
+                            blockView.groups.Add(mainblock.group);
                         }
-                        else
-                        {
-                            mainblock.group = mainblock.group.GetChild(this, mainblock.group, mainblock);
-                            preNew.group = preNew.RemoveChild(this, preNew, mainblock.group);
-                        }
-                        if (preNew.group != null && preNew.group.Blocks.Count > 0)
-                        {
-                            blockView.groups.Add(preNew);
-                        }
+                        blockView.groups.Remove(mainblock.group);
                         blockView.groups.Add(mainblock.group);
+                        Cursor = Cursors.Hand;
+                        break;
                     }
-                    blockView.groups.Remove(mainblock.group);
-                    blockView.groups.Add(mainblock.group);
-                    Cursor = Cursors.Hand;
-                    break;
                 }
             }
         }
@@ -403,6 +477,7 @@ namespace DrawNassiProject
                 newbtmp = Clear(newbtmp);
                 blockView.SetPosition(mainblock.group, this, e.X - xR, e.Y - yR, mainblock.type);
                 graf = Graphics.FromImage(newbtmp);
+                RefreshGroups();
                 RefreshGroups();
             }
         }
@@ -423,12 +498,13 @@ namespace DrawNassiProject
         {
             foreach (var block in item.Blocks)
             {
-                if (block.type == 1)
+                if (block.type >= 1 && block.type <= 4)
                 {
-                    block.subgroup[0].Draw(this);
-                    Recurst(block.subgroup[0]);
-                    block.subgroup[1].Draw(this);
-                    Recurst(block.subgroup[1]);
+                    foreach (var news in block.subgroup)
+                    {
+                        news.Draw(this);
+                        Recurst(news);
+                    }
                 }
             }
         }
@@ -437,10 +513,12 @@ namespace DrawNassiProject
             foreach (var block in item.Blocks)
             {
                 blockView.blocks.Add(block);
-                if (block.type == 1)
+                if (block.type >= 1 && block.type <= 4)
                 {
-                    BlocksRecusrst(block.subgroup[0]);
-                    BlocksRecusrst(block.subgroup[1]);
+                    foreach (var news in block.subgroup)
+                    {
+                        BlocksRecusrst(news);
+                    }
                 }
             }
         }
@@ -461,67 +539,108 @@ namespace DrawNassiProject
                 {
                     if (blockView.blocks[i] != mainblock && blockView.blocks[i].group != mainblock.group)
                     {
-                        if (blockView.blocks[i].blockInternalX <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY+blockView.blocks[i].Height <= mainblock.blockInternalY + yR
-    && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY + 10 >= mainblock.blockInternalY)
+                        if (mainblock.subgroup != null && blockView.blocks[i].group == mainblock.subgroup[0])
                         {
-                            blockView.StickingBlock(blockView.blocks[i].group, mainblock.group, this);
-                            break;
+
                         }
-                        else if (blockView.blocks[i].blockInternalX <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY <= mainblock.blockInternalY + yR
-    && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                        else
                         {
-                            switch (blockView.blocks[i].type)
+                            if (blockView.blocks[i].blockInternalX <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + blockView.blocks[i].Height <= mainblock.blockInternalY + yR
+    && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY + 10 >= mainblock.blockInternalY)
                             {
-                                case 0: 
-                                    {
-                                    }
-                                    break;
-                                case 1: 
-                                    {
-                                        if (blockView.blocks[i].blockInternalX+blockView.blocks[i].Width/2 <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY+ (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
-    && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX 
-    && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                                blockView.StickingBlock(blockView.blocks[i].group, mainblock.group, this);
+                                break;
+                            }
+                            else if (blockView.blocks[i].blockInternalX <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY <= mainblock.blockInternalY + yR
+        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                            {
+                                switch (blockView.blocks[i].type)
+                                {
+                                    case 1:
                                         {
-                                            if (blockView.blocks[i].subgroup[1].Blocks.Count == 0)
+                                            if (blockView.blocks[i].blockInternalX + blockView.blocks[i].Width / 2 <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
+        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
+        && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
                                             {
-                                                blockView.InBlocks(blockView.blocks[i], mainblock.group, this, 1);
-                                                break;
+                                                if (blockView.blocks[i].subgroup[1].Blocks.Count == 0)
+                                                {
+                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, 1);
+                                                    break;
+                                                }
+                                            }
+                                            else if (blockView.blocks[i].blockInternalX <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
+        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
+        && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                                            {
+                                                if (blockView.blocks[i].subgroup[0].Blocks.Count == 0)
+                                                {
+                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, 0);
+                                                    break;
+                                                }
                                             }
                                         }
-                                        else if (blockView.blocks[i].blockInternalX <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
-    && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
-    && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                                        break;
+                                    case 2:
                                         {
-                                            if (blockView.blocks[i].subgroup[0].Blocks.Count == 0)
+                                            if (blockView.blocks[i].blockInternalX + blockView.blocks[i].Width - blockView.blocks[i].Width/4 <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
+        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
+        && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
                                             {
-                                                blockView.InBlocks(blockView.blocks[i], mainblock.group, this, 0);
-                                                break;
+                                                if (blockView.blocks[i].subgroup[blockView.blocks[i].subgroup.Count - 1].Blocks.Count == 0)
+                                                {
+                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, blockView.blocks[i].subgroup.Count-1);
+                                                    break;
+                                                }
+                                            }
+                                            else if (blockView.blocks[i].blockInternalX <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
+        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
+        && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                                            {
+                                                if (blockView.blocks[i].subgroup[0].Blocks.Count == 0)
+                                                {
+                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, 0);
+                                                    break;
+                                                }
+                                                else if (blockView.blocks[i].subgroup.Count >= 2 && blockView.blocks[i].type == 2)
+                                                {
+                                                    blockView.blocks[i].subgroup.Insert(blockView.blocks[i].subgroup.Count - 2, mainblock.group);
+                                                    break;
+                                                }
                                             }
                                         }
-                                    }
-                                    break;
-                                case 2:
-                                    {
-                                        
-                                    }
-                                    break;
-                                case 3: 
-                                    { 
-
-                                    }
-                                    break;
-                                case 4: 
-                                    { 
-
-                                    }
-                                    break;
-                                case 5: 
-                                    {
-
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                        break;
+                                    case 3:
+                                        {
+                                            if (blockView.blocks[i].blockInternalX + blockView.blocks[i].Width / 4 <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
+        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
+        && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                                            {
+                                                if (blockView.blocks[i].subgroup[0].Blocks.Count == 0)
+                                                {
+                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, 0);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case 4:
+                                        {
+                                            if (blockView.blocks[i].blockInternalX + blockView.blocks[i].Width / 4 <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY <= mainblock.blockInternalY + yR
+        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
+        && blockView.blocks[i].Height / 2 + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
+                                            {
+                                                if (blockView.blocks[i].subgroup[0].Blocks.Count == 0)
+                                                {
+                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, 0);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
                             }
                         }
                     }
@@ -585,28 +704,81 @@ namespace DrawNassiProject
                 RefreshGroups();
                 Focus();
             }
+            else if (e.KeyData == Keys.N && mainblock != null && dragging)
+            {
+                if (mainblock.subgroup != null && mainblock.subgroup.Count >= 2 && mainblock.type == 2)
+                {
+                    var y = new OperationBlock(clr, drawBrush.Color, contrColor, 0, 0, 0, 52, 28, $"Block {++i}");
+                    Unit x = new Unit()
+                    {
+                        Blocks = new List<Block>()
+                    };
+                    x.Blocks.Add(y);
+                    y.group = x;
+                    form = new SetText(this, y);
+                    form.ShowDialog();
+                    y.text = form.Block.text;
+                    y.blockInternalColor = form.Block.blockInternalColor;
+                    y.contrInternalColor = form.Block.contrInternalColor;
+                    mainblock.subgroup.Insert(mainblock.subgroup.Count - 1, x);
+                    mainblock = null;
+                    dragging = false;
+                    newbtmp = SizeCheck(newbtmp);
+                    newbtmp = Clear(newbtmp);
+                    graf = Graphics.FromImage(newbtmp);
+                    RefreshGroups();
+                }
+            }
+            else if (e.KeyData == Keys.I && mainblock != null && dragging)
+            {
+                for (int i = blockView.blocks.Count - 1; i >= 0; i--)
+                {
+                    if (blockView.blocks[i] != mainblock && blockView.blocks[i].group != mainblock.group)
+                    {
+                        if (mainblock.subgroup != null && blockView.blocks[i].group == mainblock.subgroup[0])
+                        {
+
+                        }
+                        else
+                        {
+                            if (blockView.blocks[i].subgroup != null && blockView.blocks[i].subgroup.Count >= 2 && blockView.blocks[i].type == 2)
+                            {
+                                blockView.blocks[i].subgroup.Insert(blockView.blocks[i].subgroup.Count - 1, mainblock.group);
+                                mainblock = null;
+                                dragging = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         #endregion
         #region InBlockChanging
         SetText form;
         private void pictureBox7_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            for (int i = blockView.blocks.Count - 1; i >= 0; i--)
+            if (e.Button == MouseButtons.Right)
             {
-                if (blockView.blocks[i].blockInternalX <= e.X && blockView.blocks[i].blockInternalY <= e.Y
-                    && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= e.X && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= e.Y)
+                Cursor = Cursors.Hand;
+                for (int i = blockView.blocks.Count - 1; i >= 0; i--)
                 {
-                    form = new SetText(this, blockView.blocks[i]);
-                    form.ShowDialog();
-                    blockView.blocks[i].text = form.Block.text;
-                    blockView.blocks[i].blockInternalColor = form.Block.blockInternalColor;
-                    blockView.blocks[i].contrInternalColor = form.Block.contrInternalColor;
-                    newbtmp = SizeCheck(newbtmp);
-                    newbtmp = Clear(newbtmp);
-                    graf = Graphics.FromImage(newbtmp);
-                    RefreshGroups();
-                    break;
+                    if (blockView.blocks[i].blockInternalX <= e.X && blockView.blocks[i].blockInternalY <= e.Y
+                        && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= e.X && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= e.Y)
+                    {
+                        form = new SetText(this, blockView.blocks[i]);
+                        form.ShowDialog();
+                        blockView.blocks[i].text = form.Block.text;
+                        blockView.blocks[i].blockInternalColor = form.Block.blockInternalColor;
+                        blockView.blocks[i].contrInternalColor = form.Block.contrInternalColor;
+                        newbtmp = SizeCheck(newbtmp);
+                        newbtmp = Clear(newbtmp);
+                        graf = Graphics.FromImage(newbtmp);
+                        RefreshGroups();
+                        break;
+                    }
                 }
+                Cursor = Cursors.Default;
             }
         }
         #endregion
