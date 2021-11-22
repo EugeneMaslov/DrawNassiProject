@@ -81,7 +81,7 @@ namespace DrawNassiProject
             newbtmp = new Bitmap(pictureBox7.Width, pictureBox7.Height);
             DrawFirst(Color.White, drawBrush.Color, contrColor, 52, 28, "");
             button1.BackgroundImage = bitmap;
-            DrawSecond(Color.White, drawBrush.Color, contrColor, 52, 28, "", 0);
+            DrawSecond(Color.White, drawBrush.Color, contrColor, 52, 28, "", 0, false);
             button2.BackgroundImage = bitmap;
             DrawThird(Color.White, drawBrush.Color, contrColor, 52, 28, "", 0);
             button3.BackgroundImage = bitmap;
@@ -114,30 +114,29 @@ namespace DrawNassiProject
         {
             foreach (var item in groups)
             {
+                Rec(item);
                 item.group = item;
-                Rec(item.group);
             }
         }
         private void Rec(Unit item)
         {
             foreach (var block in item.Blocks)
             {
-                block.group = item;
                 if (block.type >= 1 && block.type <= 4)
                 {
                     foreach (var news in block.subgroup)
                     {
-                        Rec(news);
                         BlocksRecusrst(news);
+                        Rec(news);
                     }
                 }
+                block.group = item;
             }
         }
         private void BlocksRecusrstRelise(Unit item)
         {
             foreach (var block in item.Blocks)
             {
-                block.group = item;
                 if (block.type >= 1 && block.type <= 4)
                 {
                     foreach (var news in block.subgroup)
@@ -145,6 +144,7 @@ namespace DrawNassiProject
                         BlocksRecusrstRelise(news);
                     }
                 }
+                block.group = item;
             }
         }
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -160,7 +160,7 @@ namespace DrawNassiProject
                     TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto,
                     NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
                 };
-                blockView.groups = JsonConvert.DeserializeObject<List<Unit>>(File.ReadAllText(openFileDialog1.FileName), settings);
+                blockView.groups = JsonConvert.DeserializeObject<List<Unit>>(Encoding.GetEncoding(1251).GetString(File.ReadAllBytes(openFileDialog1.FileName)), settings);
                 RecurtsRelise(blockView.groups);
                 blockView.blocks.Clear();
                 RefreshGroups();
@@ -231,7 +231,7 @@ namespace DrawNassiProject
         {
             DrawFirst(clr, drawBrush.Color, contrColor, 52, 28, "");
             button1.BackgroundImage = bitmap;
-            DrawSecond(clr, drawBrush.Color, contrColor, 52, 28, "", 0);
+            DrawSecond(clr, drawBrush.Color, contrColor, 52, 28, "", 0, false);
             button2.BackgroundImage = bitmap;
             DrawThird(clr, drawBrush.Color, contrColor, 52, 28, "", 0);
             button3.BackgroundImage = bitmap;
@@ -299,7 +299,7 @@ namespace DrawNassiProject
             graf.FillRectangle(new SolidBrush(color), 1, 1, width - 1, height - 1);
             graf.DrawRectangle(new Pen(contrColor, 1), 0, 0, width - 1, height - 1);
         }
-        public void DrawSecond(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addWidth)
+        public void DrawSecond(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addWidth, bool parable)
         {
             DrawRectangle(color, contrColor, width, height);
             graf.DrawLine(new Pen(contrColor, 1), new Point(0, 0), new Point(width/2, (height - addWidth)/ 2 ));
@@ -307,6 +307,11 @@ namespace DrawNassiProject
             graf.DrawLine(new Pen(contrColor, 1), new Point(0, (height - addWidth) / 2), new Point(width, (height - addWidth) / 2));
             graf.DrawLine(new Pen(contrColor, 1), new Point(width/2, height), new Point(width/2, (height-addWidth)/2));
             graf.DrawString(text, font, new SolidBrush(fontColor), width / 2, 0, drawFormat);
+            if (parable)
+            {
+                graf.DrawString("Да", font, new SolidBrush(fontColor), 0 + 2 * font.Size, ((height - addWidth) / 6), drawFormat);
+                graf.DrawString("Нет", font, new SolidBrush(fontColor), width - 2 * font.Size, ((height - addWidth) / 6), drawFormat);
+            }
         }
         public void DrawThird(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addHeight)
         {

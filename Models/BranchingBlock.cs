@@ -81,7 +81,7 @@ namespace DrawNassiProject.Models
                 subgroup[1].Blocks[0].blockInternalX = blockInternalX + Width / 2;
                 subgroup[1].Blocks[0].blockInternalY = blockInternalY + (Height - addHeight) / 2;
             }
-            drawNassi.DrawSecond(blockInternalColor, fontInternalColor, contrInternalColor, Width, Height, text, addHeight);
+            drawNassi.DrawSecond(blockInternalColor, fontInternalColor, contrInternalColor, Width, Height, text, addHeight, subgroup.Count > 0);
             return drawNassi;
         }
     }
