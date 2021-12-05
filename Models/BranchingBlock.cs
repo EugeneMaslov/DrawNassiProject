@@ -10,16 +10,9 @@ namespace DrawNassiProject.Models
     [Serializable]
     public class BranchingBlock : Block
     {
-        public BranchingBlock()
-        {
-
-        }
+        public BranchingBlock() {}
         public BranchingBlock(Color color, Color fontColor, Color contrColor, int key, int x, int y, int width, int height, string text)
         {
-            blockInCon = new List<Block>();
-            blockOutCon = new List<Block>();
-            maxInCon = 1;
-            maxOutCon = 2;
             blockInternalColor = color;
             fontInternalColor = fontColor;
             blockInternalKey = key;

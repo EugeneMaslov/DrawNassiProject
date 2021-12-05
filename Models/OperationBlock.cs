@@ -9,16 +9,9 @@ namespace DrawNassiProject.Models
     [Serializable]
     class OperationBlock : Block
     {
-        public OperationBlock()
-        {
-            
-        }
+        public OperationBlock() { }
         public OperationBlock(Color color, Color fontColor, Color contrColor, int key, int x, int y, int width, int height, string text)
         {
-            blockInCon = new List<Block>();
-            blockOutCon = new List<Block>();
-            maxInCon = 1;
-            maxOutCon = 1;
             blockInternalColor = color;
             fontInternalColor = fontColor;
             blockInternalKey = key;

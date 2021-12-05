@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -20,26 +21,29 @@ namespace DrawNassiProject
     public partial class DrawNassi : Form
     {
         #region Initialization
+        
         public Color clr = Color.White;
-        string serialized;
         public int maxWidth = 52;
         public Color fontColor = Color.Black;
         public Color workingPlaceColor = Color.White;
         public Color contrColor = Color.Black;
-        public Font font = new Font(FontFamily.GenericSerif, 8, FontStyle.Regular);
-        Button btmp;
-        public Bitmap newbtmp;
-        SolidBrush drawBrush = new SolidBrush(Color.Black);
-        StringFormat drawFormat = new StringFormat();
         public Bitmap bitmap = new Bitmap(52, 28);
         public Graphics graf;
         public BlockViewModel blockView = new BlockViewModel();
+        public Font font = new Font(FontFamily.GenericSerif, 8, FontStyle.Regular);
+        public Bitmap newbtmp;
+
+        string serialized;
         bool dragging = false;
+        Button btmp;
+        SolidBrush drawBrush = new SolidBrush(Color.Black);
+        StringFormat drawFormat = new StringFormat();
+        
         public DrawNassi()
         {
             InitializeComponent();
 
-            graf = Graphics.FromImage(bitmap);
+            
             label2.Hide();
             textBox2.Hide();
 
@@ -54,16 +58,10 @@ namespace DrawNassiProject
             button6.AllowDrop = true;
 
             pictureBox7.AllowDrop = true;
-            //pictureBox7.DragDrop += All_DragDrop;
             pictureBox7.DragOver += All_DragOver;
             pictureBox7.DragEnter += All_DragEnter;
 
             button1.DragDrop += Operation_DragDrop;
-            //button2.DragDrop += All_DragDrop;
-            //button3.DragDrop += All_DragDrop;
-            //button4.DragDrop += All_DragDrop;
-            //button5.DragDrop += All_DragDrop;
-            //button6.DragDrop += All_DragDrop;
 
             button1.MouseDown += All_MouseDown;
             button2.MouseDown += All_MouseDown;
@@ -72,12 +70,8 @@ namespace DrawNassiProject
             button5.MouseDown += All_MouseDown;
             button6.MouseDown += All_MouseDown;
 
-            button1.MouseMove += All_MouseMove;
-            button2.MouseMove += All_MouseMove;
-            button3.MouseMove += All_MouseMove;
-            button4.MouseMove += All_MouseMove;
-            button5.MouseMove += All_MouseMove;
-            button6.MouseMove += All_MouseMove;
+            graf = Graphics.FromImage(bitmap);
+            graf.SmoothingMode = SmoothingMode.HighQuality;
             newbtmp = new Bitmap(pictureBox7.Width, pictureBox7.Height);
             DrawFirst(Color.White, drawBrush.Color, contrColor, 52, 28, "");
             button1.BackgroundImage = bitmap;
@@ -93,8 +87,12 @@ namespace DrawNassiProject
             button6.BackgroundImage = bitmap;
             button7.ForeColor = Color.White;
             drawFormat.Trimming = StringTrimming.Word;
-            drawFormat.FormatFlags = drawFormat.FormatFlags | StringFormatFlags.NoWrap;
+            drawFormat.FormatFlags |= StringFormatFlags.NoWrap;
             drawFormat.Alignment = StringAlignment.Center;
+        }
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            Help.ShowHelp(this, "NewProject.chm");
         }
         #endregion
         #region Loading and Saving
@@ -164,6 +162,7 @@ namespace DrawNassiProject
                 RecurtsRelise(blockView.groups);
                 blockView.blocks.Clear();
                 RefreshGroups();
+                graf.Dispose();
             }
             catch (System.IO.FileNotFoundException situation)
             {
@@ -216,10 +215,7 @@ namespace DrawNassiProject
         private void выключитьToolStripMenuItem_Click(object sender, EventArgs e) { textBox2.Hide(); label2.Hide(); }
         #endregion
         #region ColorChoise
-        private void button7_Click(object sender, EventArgs e)
-        {
-            ReDrawBlock();
-        }
+        private void button7_Click(object sender, EventArgs e) => ReDrawBlock();
         private void ReDrawBlock()
         {
             colorDialog1.Color = clr;
@@ -274,10 +270,7 @@ namespace DrawNassiProject
             newbtmp = Clear(newbtmp);
             RefreshGroups();
         }
-        private void цветБлоковToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ReDrawBlock();
-        }
+        private void цветБлоковToolStripMenuItem_Click(object sender, EventArgs e) => ReDrawBlock();
         private void цветКонтураToolStripMenuItem_Click(object sender, EventArgs e)
         {
             colorDialog4.Color = contrColor;
@@ -287,6 +280,8 @@ namespace DrawNassiProject
         }
         #endregion
         #region Drawing
+        static byte id;
+        static int i = 0;
         public void DrawFirst(Color color, Color fontColor, Color contrColor, int width, int height , string text)
         {
             DrawRectangle(color, contrColor, width, height);
@@ -296,6 +291,7 @@ namespace DrawNassiProject
         {
             bitmap = new Bitmap(width, height);
             graf = Graphics.FromImage(bitmap);
+            graf.SmoothingMode = SmoothingMode.HighQuality;
             graf.FillRectangle(new SolidBrush(color), 1, 1, width - 1, height - 1);
             graf.DrawRectangle(new Pen(contrColor, 1), 0, 0, width - 1, height - 1);
         }
@@ -355,16 +351,8 @@ namespace DrawNassiProject
                 btmp.DoDragDrop(btmp.BackgroundImage, DragDropEffects.Copy);
             }
         }
-        private void All_MouseMove(object sender, MouseEventArgs e)
-        {
-        }
-        static byte id;
 
-        private void All_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-        static int i = 0;
+        private void All_DragEnter(object sender, DragEventArgs e) => e.Effect = DragDropEffects.Copy;
         private void Operation_DragDrop(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
@@ -377,35 +365,13 @@ namespace DrawNassiProject
             textBox2.Text += "; кол-во групп: " + blockView.groups.Count.ToString();
         }
 
-        private void All_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-        private void button1_DragLeave(object sender, EventArgs e)
-        {
-            id = 0;
-        }
-        private void button2_MouseLeave(object sender, EventArgs e)
-        {
-            id = 1;
-        }
-        private void button3_DragLeave(object sender, EventArgs e)
-        {
-            id = 2;
-        }
-        private void button4_DragLeave(object sender, EventArgs e)
-        {
-            id = 3;
-        }
-
-        private void button5_DragLeave(object sender, EventArgs e)
-        {
-            id = 4;
-        }
-        private void button6_DragLeave(object sender, EventArgs e)
-        {
-            id = 5;
-        }
+        private void All_DragOver(object sender, DragEventArgs e) => e.Effect = DragDropEffects.Copy;
+        private void button1_DragLeave(object sender, EventArgs e) => id = 0;
+        private void button2_MouseLeave(object sender, EventArgs e) => id = 1;
+        private void button3_DragLeave(object sender, EventArgs e) => id = 2;
+        private void button4_DragLeave(object sender, EventArgs e) => id = 3;
+        private void button5_DragLeave(object sender, EventArgs e) => id = 4;
+        private void button6_DragLeave(object sender, EventArgs e) => id = 5;
         #endregion
         #region Moving
         Block mainblock;
@@ -426,14 +392,6 @@ namespace DrawNassiProject
                         xR = e.X - blockView.blocks[i].blockInternalX;
                         yR = e.Y - blockView.blocks[i].blockInternalY;
                         mainblock = blockView.blocks[i];
-                        foreach (var block in mainblock.blockOutCon)
-                        {
-                            block.blockInCon.Remove(mainblock);
-                        }
-                        foreach (var block in mainblock.blockInCon)
-                        {
-                            block.blockOutCon.Remove(mainblock);
-                        }
                         if (mainblock.group.Blocks.Count > 0)
                         {
                             Unit preNew = mainblock.group;
@@ -483,7 +441,7 @@ namespace DrawNassiProject
                 blockView.SetPosition(mainblock.group, this, e.X - xR, e.Y - yR, mainblock.type);
                 graf = Graphics.FromImage(newbtmp);
                 RefreshGroups();
-                RefreshGroups();
+                graf.Dispose();
             }
         }
         private void RefreshGroups()
@@ -498,6 +456,7 @@ namespace DrawNassiProject
             }
             pictureBox7.BackgroundImage = newbtmp;
             pictureBox7.Refresh();
+            graf.Dispose();
         }
         private void Recurst(Unit item)
         {

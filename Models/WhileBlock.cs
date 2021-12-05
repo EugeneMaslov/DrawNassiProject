@@ -10,16 +10,9 @@ namespace DrawNassiProject.Models
     [Serializable]
     class WhileBlock : Block
     {
-        public WhileBlock()
-        {
-
-        }
+        public WhileBlock() { }
         public WhileBlock(Color color, Color fontColor, Color contrColor, int key, int x, int y, int width, int height, string text)
         {
-            blockInCon = new List<Block>();
-            blockOutCon = new List<Block>();
-            maxInCon = 1;
-            maxOutCon = int.MaxValue;
             blockInternalColor = color;
             fontInternalColor = fontColor;
             blockInternalKey = key;
