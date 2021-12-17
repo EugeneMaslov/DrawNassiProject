@@ -428,6 +428,7 @@ namespace DrawNassiProject
                         Cursor = Cursors.Hand;
                         break;
                     }
+                    RefreshGroups();
                 }
             }
         }
@@ -441,7 +442,6 @@ namespace DrawNassiProject
                 blockView.SetPosition(mainblock.group, this, e.X - xR, e.Y - yR, mainblock.type);
                 graf = Graphics.FromImage(newbtmp);
                 RefreshGroups();
-                graf.Dispose();
             }
         }
         private void RefreshGroups()
@@ -450,27 +450,12 @@ namespace DrawNassiProject
             blockView.blocks.Clear();
             foreach (var item in blockView.groups)
             {
-                BlocksRecusrst(item);
                 item.Draw(this);
-                Recurst(item);
+                BlocksRecusrst(item);
             }
             pictureBox7.BackgroundImage = newbtmp;
             pictureBox7.Refresh();
             graf.Dispose();
-        }
-        private void Recurst(Unit item)
-        {
-            foreach (var block in item.Blocks)
-            {
-                if (block.type >= 1 && block.type <= 4)
-                {
-                    foreach (var news in block.subgroup)
-                    {
-                        news.Draw(this);
-                        Recurst(news);
-                    }
-                }
-            }
         }
         private void BlocksRecusrst(Unit item)
         {
@@ -481,6 +466,7 @@ namespace DrawNassiProject
                 {
                     foreach (var news in block.subgroup)
                     {
+                        news.Draw(this);
                         BlocksRecusrst(news);
                     }
                 }
@@ -707,6 +693,7 @@ namespace DrawNassiProject
                         {
                             if (blockView.blocks[i].subgroup != null && blockView.blocks[i].subgroup.Count >= 2 && blockView.blocks[i].type == 2)
                             {
+                                blockView.groups.Remove(mainblock.group);
                                 blockView.blocks[i].subgroup.Insert(blockView.blocks[i].subgroup.Count - 1, mainblock.group);
                                 mainblock = null;
                                 dragging = false;

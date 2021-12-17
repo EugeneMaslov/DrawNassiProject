@@ -75,7 +75,10 @@ namespace DrawNassiProject.Models
             {
                 addHeight = addHeight - (int)drawNassi.font.Size * 2;
             }
-            group.UnitWidth = param * (subgroup.Count - 1) + group.UnitWidth/4;
+            if (group.UnitWidth < (param * (subgroup.Count - 1) + group.UnitWidth / 4))
+            {
+                group.UnitWidth = param * (subgroup.Count - 1) + group.UnitWidth / 4;
+            }
             Height = (int)drawNassi.font.Size * 4 + addHeight;
             Width = group.UnitWidth;
             int j = 0;

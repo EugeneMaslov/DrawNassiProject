@@ -45,15 +45,17 @@ namespace DrawNassiProject.Models
                 foreach (var block in item.Blocks)
                 {
                     preHeight += block.Height;
-                    parametr = (int)(block.group.UnitWidth / 4.0);
-                    if (block.group.UnitWidth > group.UnitWidth - group.UnitWidth/4)
+                    if (block.Width >= (int)(group.UnitWidth*3.0/4.0))
                     {
-                        group.UnitWidth = block.group.UnitWidth + (int)(block.group.UnitWidth/4.0);
+                        group.UnitWidth = (int)(block.Width*5.0/4.0);
                     }
                     else
                     {
-                        block.Width = group.UnitWidth - group.UnitWidth/4;
-                        block.group.UnitWidth = group.UnitWidth - group.UnitWidth / 4;
+                        block.Width = (int)(group.UnitWidth * 3.0/4.0);
+                    }
+                    if (parametr < group.UnitWidth - block.Width)
+                    {
+                        parametr = group.UnitWidth - block.Width;
                     }
                 }
                 if (preHeight > addHeight)
