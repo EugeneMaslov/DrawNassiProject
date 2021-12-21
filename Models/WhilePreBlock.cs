@@ -35,6 +35,7 @@ namespace DrawNassiProject.Models
                     group.UnitWidth = Width;
                 }
             }
+            else if (text.Length == 0) text = "Unnamed Block";
             Width = group.UnitWidth;
             addHeight = 0;
             int parametr = 0;
@@ -45,17 +46,21 @@ namespace DrawNassiProject.Models
                 foreach (var block in item.Blocks)
                 {
                     preHeight += block.Height;
-                    if (block.Width >= (int)(group.UnitWidth*3.0/4.0))
+                    if (block.Width > (int)(group.UnitWidth*3.0/4))
                     {
-                        group.UnitWidth = (int)(block.Width*5.0/4.0);
+                        group.UnitWidth = (int)(block.Width*5.0/4);
                     }
                     else
                     {
-                        block.Width = (int)(group.UnitWidth * 3.0/4.0);
+                        block.Width = (int)(group.UnitWidth*3.0/4);
                     }
                     if (parametr < group.UnitWidth - block.Width)
                     {
                         parametr = group.UnitWidth - block.Width;
+                    }
+                    else
+                    {
+                        block.Width = group.UnitWidth - parametr;
                     }
                 }
                 if (preHeight > addHeight)
@@ -68,14 +73,17 @@ namespace DrawNassiProject.Models
                 addHeight = addHeight - (int)drawNassi.font.Size*2;
             }
             Height = (int)drawNassi.font.Size * 4 + addHeight;
-            Width = group.UnitWidth;
+            if (group.UnitWidth > Width)
+            {
+                Width = group.UnitWidth;
+            }
             if (subgroup[0].Blocks.Count > 0)
             {
                 subgroup[0].Blocks[0].group.UnitWidth = group.UnitWidth - parametr;
                 subgroup[0].Blocks[0].blockInternalX = blockInternalX + parametr;
                 subgroup[0].Blocks[0].blockInternalY = blockInternalY + (Height - addHeight) / 2;
             }
-            drawNassi.DrawFouth(this.blockInternalColor, fontInternalColor, contrInternalColor, Width, Height, text, addHeight);
+            drawNassi.DrawFouth(blockInternalColor, fontInternalColor, contrInternalColor, Width, Height, text, addHeight);
             return drawNassi;
         }
     }

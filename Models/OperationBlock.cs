@@ -33,6 +33,7 @@ namespace DrawNassiProject.Models
                     group.UnitWidth = Width;
                 }
             }
+            else if (text.Length == 0) text = "Unnamed Block";
             else Width = group.UnitWidth;
             Height = (int)drawNassi.font.Size * 2;
             drawNassi.DrawFirst(this.blockInternalColor, fontInternalColor, contrInternalColor, Width, Height, text);

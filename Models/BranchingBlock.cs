@@ -35,6 +35,7 @@ namespace DrawNassiProject.Models
                     group.UnitWidth = Width;
                 }
             }
+            else if (text.Length == 0) text = "Unnamed Block";
             Width = group.UnitWidth;
             addHeight = 0;
             int preHeight;

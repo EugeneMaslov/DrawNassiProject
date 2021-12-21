@@ -124,7 +124,7 @@ namespace DrawNassiProject
                 {
                     foreach (var news in block.subgroup)
                     {
-                        BlocksRecusrst(news);
+                        BlocksRecusrstRelise(news);
                         Rec(news);
                     }
                 }
@@ -443,6 +443,7 @@ namespace DrawNassiProject
                 graf = Graphics.FromImage(newbtmp);
                 RefreshGroups();
             }
+            else RefreshGroups();
         }
         private void RefreshGroups()
         {
