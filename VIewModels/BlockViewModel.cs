@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DrawNassiProject.Models;
-using System.Drawing;
+﻿using DrawNassiProject.Models;
 using DrawNassiProject.Models.Composite;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace DrawNassiProject.ViewModels
 {
@@ -126,7 +123,7 @@ namespace DrawNassiProject.ViewModels
                 if (block == unit)
                 {
                     groups.Remove(block);
-                    for (int i = block.Blocks.Count-1; i >= 0; i--)
+                    for (int i = block.Blocks.Count - 1; i >= 0; i--)
                     {
                         blocks.Remove(block.Blocks[i]);
                     }
@@ -135,7 +132,7 @@ namespace DrawNassiProject.ViewModels
             }
             return drawNassi;
         }
-        public DrawNassi SetPosition(Unit unit, DrawNassi drawNassi, int x, int y,  byte type)
+        public DrawNassi SetPosition(Unit unit, DrawNassi drawNassi, int x, int y, byte type)
         {
             foreach (var item in unit.Blocks)
             {
@@ -146,7 +143,7 @@ namespace DrawNassiProject.ViewModels
             unit.Draw(drawNassi);
             return drawNassi;
         }
-        public DrawNassi TextChange(Block block, string text,DrawNassi drawNassi)
+        public DrawNassi TextChange(Block block, string text, DrawNassi drawNassi)
         {
             block.text = text;
             return drawNassi;
@@ -171,7 +168,7 @@ namespace DrawNassiProject.ViewModels
             }
             groups.Remove(unit);
             groups.Remove(group);
-            for (int i = groups.Count-1; i >= 0; i--)
+            for (int i = groups.Count - 1; i >= 0; i--)
             {
                 if (groups[i].Blocks.Count == 0)
                 {

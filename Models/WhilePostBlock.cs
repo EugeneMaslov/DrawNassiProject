@@ -2,15 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace DrawNassiProject.Models
 {
     [Serializable]
     class WhilePostBlock : Block
     {
-        public WhilePostBlock() {}
+        public WhilePostBlock() { }
         public WhilePostBlock(Color color, Color fontColor, Color contrColor, int key, int x, int y, int width, int height, string text)
         {
             blockInternalColor = color;

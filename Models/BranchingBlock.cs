@@ -2,15 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace DrawNassiProject.Models
 {
     [Serializable]
     public class BranchingBlock : Block
     {
-        public BranchingBlock() {}
+        public BranchingBlock() { }
         public BranchingBlock(Color color, Color fontColor, Color contrColor, int key, int x, int y, int width, int height, string text)
         {
             blockInternalColor = color;
@@ -22,12 +20,12 @@ namespace DrawNassiProject.Models
             Height = height;
             this.text = text;
             contrInternalColor = contrColor;
-            subgroup = new List<Unit>() { new Unit() { Blocks = new List<Block>() }, new Unit() { Blocks = new List<Block>() }};
+            subgroup = new List<Unit>() { new Unit() { Blocks = new List<Block>() }, new Unit() { Blocks = new List<Block>() } };
             type = 1;
         }
         public override DrawNassi Draw(DrawNassi drawNassi)
         {
-            if (group.UnitWidth < 2*text.Length * (int)drawNassi.font.Size)
+            if (group.UnitWidth < 2 * text.Length * (int)drawNassi.font.Size)
             {
                 if (text.Length > 0)
                 {
@@ -67,7 +65,7 @@ namespace DrawNassiProject.Models
                 subgroup[0].Blocks[0].group.UnitWidth = group.UnitWidth / 2;
                 subgroup[0].Blocks[0].blockInternalX = blockInternalX;
                 subgroup[0].Blocks[0].blockInternalY = blockInternalY + (Height - addHeight) / 2;
-                
+
             }
             if (subgroup[1].Blocks.Count > 0)
             {

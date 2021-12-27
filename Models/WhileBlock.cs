@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace DrawNassiProject.Models
 {
@@ -27,11 +25,11 @@ namespace DrawNassiProject.Models
         }
         public override DrawNassi Draw(DrawNassi drawNassi)
         {
-            if (group.UnitWidth < 2*text.Length * (int)drawNassi.font.Size)
+            if (group.UnitWidth < 2 * text.Length * (int)drawNassi.font.Size)
             {
                 if (text.Length > 0)
                 {
-                    Width = 2*text.Length * (int)drawNassi.font.Size;
+                    Width = 2 * text.Length * (int)drawNassi.font.Size;
                     group.UnitWidth = Width;
                 }
             }
@@ -90,7 +88,7 @@ namespace DrawNassiProject.Models
                     subgroup.Remove(subgroup[i]);
                     param = (int)((group.UnitWidth - group.UnitWidth / 4) / (double)(subgroup.Count - 1));
                 }
-                else if (subgroup[i].Blocks.Count > 0 && subgroup[i] != subgroup[subgroup.Count-1])
+                else if (subgroup[i].Blocks.Count > 0 && subgroup[i] != subgroup[subgroup.Count - 1])
                 {
                     subgroup[i].Blocks[0].group.UnitWidth = param;
                     subgroup[i].Blocks[0].blockInternalX = blockInternalX + j;
@@ -98,7 +96,7 @@ namespace DrawNassiProject.Models
                     subgroup[i].Blocks[0].blockInternalY = blockInternalY + (Height - addHeight) / 2;
                 }
             }
-            if (subgroup[subgroup.Count-1].Blocks.Count > 0)
+            if (subgroup[subgroup.Count - 1].Blocks.Count > 0)
             {
                 subgroup[subgroup.Count - 1].Blocks[0].group.UnitWidth = group.UnitWidth / 4;
                 subgroup[subgroup.Count - 1].Blocks[0].blockInternalX = blockInternalX + group.UnitWidth - group.UnitWidth / 4;

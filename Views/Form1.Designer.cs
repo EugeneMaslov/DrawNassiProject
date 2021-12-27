@@ -41,6 +41,7 @@ namespace DrawNassiProject
             this.debugModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.включитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выключитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.interModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.цветРабочегоПоляToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.шрифтToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.цветТекстаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -176,7 +177,8 @@ namespace DrawNassiProject
             // 
             this.debugModeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.включитьToolStripMenuItem,
-            this.выключитьToolStripMenuItem});
+            this.выключитьToolStripMenuItem,
+            this.interModeToolStripMenuItem});
             this.debugModeToolStripMenuItem.Name = "debugModeToolStripMenuItem";
             this.debugModeToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.debugModeToolStripMenuItem.Text = "Debug Mode";
@@ -184,16 +186,23 @@ namespace DrawNassiProject
             // включитьToolStripMenuItem
             // 
             this.включитьToolStripMenuItem.Name = "включитьToolStripMenuItem";
-            this.включитьToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.включитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.включитьToolStripMenuItem.Text = "Включить";
             this.включитьToolStripMenuItem.Click += new System.EventHandler(this.включитьToolStripMenuItem_Click);
             // 
             // выключитьToolStripMenuItem
             // 
             this.выключитьToolStripMenuItem.Name = "выключитьToolStripMenuItem";
-            this.выключитьToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.выключитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.выключитьToolStripMenuItem.Text = "Выключить";
             this.выключитьToolStripMenuItem.Click += new System.EventHandler(this.выключитьToolStripMenuItem_Click);
+            // 
+            // interModeToolStripMenuItem
+            // 
+            this.interModeToolStripMenuItem.Name = "interModeToolStripMenuItem";
+            this.interModeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.interModeToolStripMenuItem.Text = "Inter Mode";
+            this.interModeToolStripMenuItem.Click += new System.EventHandler(this.interModeToolStripMenuItem_Click);
             // 
             // цветРабочегоПоляToolStripMenuItem
             // 
@@ -616,6 +625,7 @@ namespace DrawNassiProject
         private System.Windows.Forms.ColorDialog colorDialog4;
         private System.Windows.Forms.ColorDialog colorDialog5;
         private System.Windows.Forms.SaveFileDialog saveFileDialog2;
+        private System.Windows.Forms.ToolStripMenuItem interModeToolStripMenuItem;
     }
 }
 

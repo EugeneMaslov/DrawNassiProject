@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using DrawNassiProject.Models;
+﻿using DrawNassiProject.Models;
 using DrawNassiProject.Models.Composite;
 using DrawNassiProject.ViewModels;
 using DrawNassiProject.Views;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Windows.Forms;
+using Codes;
 
 namespace DrawNassiProject
 {
     public partial class DrawNassi : Form
     {
         #region Initialization
-        
+
         public Color clr = Color.White;
         public int maxWidth = 52;
+        Codes.Codes codes = new Codes.Codes();
         public Color fontColor = Color.Black;
         public Color workingPlaceColor = Color.White;
         public Color contrColor = Color.Black;
@@ -38,12 +36,12 @@ namespace DrawNassiProject
         Button btmp;
         SolidBrush drawBrush = new SolidBrush(Color.Black);
         StringFormat drawFormat = new StringFormat();
-        
+
         public DrawNassi()
         {
             InitializeComponent();
 
-            
+
             label2.Hide();
             textBox2.Hide();
 
@@ -211,8 +209,13 @@ namespace DrawNassiProject
         }
         #endregion
         #region DebugMode
+
         private void включитьToolStripMenuItem_Click(object sender, EventArgs e) { textBox2.Show(); label2.Show(); }
-        private void выключитьToolStripMenuItem_Click(object sender, EventArgs e) { textBox2.Hide(); label2.Hide(); }
+        private void выключитьToolStripMenuItem_Click(object sender, EventArgs e){textBox2.Hide();label2.Hide();}
+        private void interModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            codes.Intermode(textBox2.Text);
+        }
         #endregion
         #region ColorChoise
         private void button7_Click(object sender, EventArgs e) => ReDrawBlock();
@@ -282,64 +285,88 @@ namespace DrawNassiProject
         #region Drawing
         static byte id;
         static int i = 0;
-        public void DrawFirst(Color color, Color fontColor, Color contrColor, int width, int height , string text)
+        public void DrawFirst(Color color, Color fontColor, Color contrColor, int width, int height, string text)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawString(text, font, new SolidBrush(fontColor), width/2, height/2-font.Size, drawFormat);
+            graf.DrawString(text, font, new SolidBrush(fontColor), width / 2, height / 2 - font.Size, drawFormat);
+            Prank(color, width, height);
         }
-        public void DrawRectangle(Color color, Color contrColor,  int width, int height)
+        public void DrawRectangle(Color color, Color contrColor, int width, int height)
         {
-            bitmap = new Bitmap(width, height);
+            if (codes.debug || codes.pash)
+            {
+                bitmap = new Bitmap(width + (int)font.Size * 2 * (width.ToString() + "x" + height.ToString()).Length+1, height);
+            } else bitmap = new Bitmap(width, height);
             graf = Graphics.FromImage(bitmap);
             graf.SmoothingMode = SmoothingMode.HighQuality;
             graf.FillRectangle(new SolidBrush(color), 1, 1, width - 1, height - 1);
             graf.DrawRectangle(new Pen(contrColor, 1), 0, 0, width - 1, height - 1);
+            if (codes.debug)
+            {
+                graf.DrawString(width.ToString() + "x" + height.ToString(), font, new SolidBrush(Color.Red), width + 1, 0);
+            }
         }
+        private Random r = new Random();
+        private void Prank(Color color, int width, int height)
+        {
+            if (codes.pash)
+            {
+                graf.FillRectangle(new SolidBrush(color), -1, -1, width+1, height+1);
+                graf.DrawRectangle(new Pen(contrColor, 1), 0, 0, width - 1, height - 1);
+                graf.DrawString(Decode(codes.vs[r.Next(codes.vs.Length)]), font, new SolidBrush(fontColor), width / 2, height / 2 - font.Size, drawFormat);
+            }
+        }
+        private string Decode(string base64Text) => Encoding.UTF8.GetString(Convert.FromBase64String(base64Text));
         public void DrawSecond(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addWidth, bool parable)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawLine(new Pen(contrColor, 1), new Point(0, 0), new Point(width/2, (height - addWidth)/ 2 ));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/2, (height - addWidth) / 2), new Point(width, 0));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(0, 0), new Point(width / 2, (height - addWidth) / 2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width / 2, (height - addWidth) / 2), new Point(width, 0));
             graf.DrawLine(new Pen(contrColor, 1), new Point(0, (height - addWidth) / 2), new Point(width, (height - addWidth) / 2));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/2, height), new Point(width/2, (height-addWidth)/2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width / 2, height), new Point(width / 2, (height - addWidth) / 2));
             graf.DrawString(text, font, new SolidBrush(fontColor), width / 2, 0, drawFormat);
             if (parable)
             {
                 graf.DrawString("Да", font, new SolidBrush(fontColor), 0 + 2 * font.Size, ((height - addWidth) / 6), drawFormat);
                 graf.DrawString("Нет", font, new SolidBrush(fontColor), width - 2 * font.Size, ((height - addWidth) / 6), drawFormat);
             }
+            Prank(color, width, height);
         }
         public void DrawThird(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addHeight)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawLine(new Pen(contrColor, 1), new Point(0, 0), new Point(width - width/4, (height - addHeight)/2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(0, 0), new Point(width - width / 4, (height - addHeight) / 2));
             graf.DrawLine(new Pen(contrColor, 1), new Point(width - width / 4, (height - addHeight) / 2), new Point(width, 0));
             graf.DrawLine(new Pen(contrColor, 1), new Point(0, (height - addHeight) / 2), new Point(width, (height - addHeight) / 2));
             graf.DrawLine(new Pen(contrColor, 1), new Point(width - width / 4, (height - addHeight) / 2), new Point(width - width / 4, height));
             graf.DrawString(text, font, new SolidBrush(fontColor), width - width / 3, 0, drawFormat);
+            Prank(color, width, height);
         }
         public void DrawFouth(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addHeight)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, height), new Point(width/4, (height - addHeight)/2));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, (height - addHeight)/2), new Point(width, (height - addHeight)/2));
-            graf.DrawString(text, font, new SolidBrush(fontColor), width / (width/2), height/ (int)(height/1.75));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width / 4, height), new Point(width / 4, (height - addHeight) / 2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width / 4, (height - addHeight) / 2), new Point(width, (height - addHeight) / 2));
+            graf.DrawString(text, font, new SolidBrush(fontColor), width / (width / 2), height / (int)(height / 1.75));
+            Prank(color, width, height);
         }
         public void DrawFifth(Color color, Color fontColor, Color contrColor, int width, int height, string text, int addHeight)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, 0), new Point(width/4, (height + addHeight) / 2));
-            graf.DrawLine(new Pen(contrColor, 1), new Point(width/4, (height + addHeight) / 2), new Point(width, (height + addHeight) / 2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width / 4, 0), new Point(width / 4, (height + addHeight) / 2));
+            graf.DrawLine(new Pen(contrColor, 1), new Point(width / 4, (height + addHeight) / 2), new Point(width, (height + addHeight) / 2));
             graf.DrawString(text, font, new SolidBrush(fontColor), width / (width / 2), height - font.Size * 2);
+            Prank(color, width, height);
         }
         public void DrawSixth(Color color, Color fontColor, Color contrColor, int width, int height, string text)
         {
             DrawRectangle(color, contrColor, width, height);
-            graf.FillRectangle(new SolidBrush(Color.Gray), 1, 1, width/4, height-2);
+            graf.FillRectangle(new SolidBrush(Color.Gray), 1, 1, width / 4, height - 2);
             graf.DrawLine(new Pen(contrColor, 1), new Point(width / 4, 0), new Point(width / 4, height));
-            graf.FillRectangle(new SolidBrush(Color.Gray), width - width/4, 1, width / 4 -1, height-2);
+            graf.FillRectangle(new SolidBrush(Color.Gray), width - width / 4, 1, width / 4 - 1, height - 2);
             graf.DrawLine(new Pen(contrColor, 1), new Point(width - width / 4, 0), new Point(width - width / 4, height));
             graf.DrawString(text, font, new SolidBrush(fontColor), width / 2, height / 2 - font.Size, drawFormat);
+            Prank(color, width, height);
         }
         #endregion
         #region DraggingPanel
@@ -377,7 +404,7 @@ namespace DrawNassiProject
         Block mainblock;
         int xR;
         int yR;
-        
+
         private void pictureBox7_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -533,13 +560,13 @@ namespace DrawNassiProject
                                         break;
                                     case 2:
                                         {
-                                            if (blockView.blocks[i].blockInternalX + blockView.blocks[i].Width - blockView.blocks[i].Width/4 <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
+                                            if (blockView.blocks[i].blockInternalX + blockView.blocks[i].Width - blockView.blocks[i].Width / 4 <= mainblock.blockInternalX + xR && blockView.blocks[i].blockInternalY + (blockView.blocks[i].Height - blockView.blocks[i].addHeight) / 2 <= mainblock.blockInternalY + yR
         && blockView.blocks[i].Width + blockView.blocks[i].blockInternalX >= mainblock.blockInternalX
         && blockView.blocks[i].Height + blockView.blocks[i].blockInternalY >= mainblock.blockInternalY)
                                             {
                                                 if (blockView.blocks[i].subgroup[blockView.blocks[i].subgroup.Count - 1].Blocks.Count == 0)
                                                 {
-                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, blockView.blocks[i].subgroup.Count-1);
+                                                    blockView.InBlocks(blockView.blocks[i], mainblock.group, this, blockView.blocks[i].subgroup.Count - 1);
                                                     break;
                                                 }
                                             }

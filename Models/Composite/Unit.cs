@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace DrawNassiProject.Models.Composite
 {
@@ -81,7 +79,7 @@ namespace DrawNassiProject.Models.Composite
                 if (index >= 0)
                 {
                     int n = Blocks.Count;
-                    for (int i = Blocks.Count-1; i >= index; i--)
+                    for (int i = Blocks.Count - 1; i >= index; i--)
                     {
                         Blocks[i].group = Blocks[index].group;
                         Blocks.Remove(Blocks[i]);
